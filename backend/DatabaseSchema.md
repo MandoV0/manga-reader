@@ -25,7 +25,9 @@ The Schema is ready to be used in the Dockerized development enviroment.
     Composite unique constraints to prevent duplicate entries
 
 
+```bash
 docker-compose down -v   # deletes containers + volumes
 docker-compose up -d     # recreates fresh DB and runs init scripts
 
 docker-compose exec postgres psql -U postgres -d mydb # To connect to the database
+```
