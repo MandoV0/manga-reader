@@ -33,7 +33,7 @@ export class MangaController {
         return res.status(400).json({ error: "Invalid mangaId" });
       }
 
-      const manga = this.mangaService.getMangaById(mangaId);
+      const manga = await this.mangaService.getMangaById(mangaId);
       res.json(manga);
     } catch (err: any) {
       if (err.message === "Manga not found") {
