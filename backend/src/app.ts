@@ -1,6 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import { Pool } from 'pg';
+import mangaRoutes from "./routes/manga.routes"
 
 dotenv.config();
 
@@ -29,5 +30,7 @@ app.get('/tables', async (req, res) => {
   `);
   res.json(result.rows);
 });
+
+app.use("/manga", mangaRoutes);
 
 export default app;
