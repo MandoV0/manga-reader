@@ -6,7 +6,7 @@ export class MangaRepository {
   async findAll(
     query: ListMangaQuery
   ): Promise<{ total: number; manga: Manga[] }> {
-    const { status, page, limit, offset } =
+    const { status, limit, offset } =
       query;
 
     const countRes = await pool.query(`SELECT COUNT(*) FROM manga`)

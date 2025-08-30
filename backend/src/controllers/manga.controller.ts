@@ -1,26 +1,26 @@
 import { Request, Response } from "express";
 import { MangaService } from "../services/manga.service";
-import { ListMangaQueryDto } from "../dtos/manga.dto";
+import { ListMangaQuery } from "../dtos/manga.dto";
+import { validateMangaQuery } from "../utils/validation";
 
 export class MangaController {
   private mangaService = new MangaService();
 
   getMangas = async (req: Request, res: Response) => {
     try {
-      const parsed = ListMangaQueryDto.parse(req.query);
-      const result = await this.mangaService.getMangas(parsed);
+      const validation = validateMangaQuery(req);
+      if (!validation.valid) {
+        return res.status(400).json({ error: validation.errors });
+      }
+      const result = await this.mangaService.getMangas(validation.query!);
 
       res.json({
-        page: parsed.page,
-        limit: parsed.limit,
-        offset: parsed.offset ?? (parsed.page - 1) * parsed.limit,
+        limit: validation.query!.limit,
+        offset: validation.query!.offset,
         total: result.total,
         manga: result.manga,
       });
     } catch (err: any) {
-      if (err.name === "ZodError") {
-        return res.status(400).json({ error: err.errors });
-      }
       console.error(err);
       res.status(500).json({ error: "Unexpected server error" });
     }
