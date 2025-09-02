@@ -16,21 +16,6 @@ const pool = new Pool({
     database: process.env.DB_NAME,
 });
 
-app.get('/', async(req, res) => {
-    const result = await pool.query('SELECT NOW()');
-    res.json(result.rows[0]);
-});
-
-app.get('/tables', async (req, res) => {
-  const result = await pool.query(`
-    SELECT table_name
-    FROM information_schema.tables
-    WHERE table_schema = 'public'
-      AND table_type = 'BASE TABLE';
-  `);
-  res.json(result.rows);
-});
-
 app.use("/manga", mangaRoutes);
 
 export default app;
