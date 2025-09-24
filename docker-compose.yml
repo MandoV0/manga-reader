@@ -12,14 +12,16 @@ services:
       - pgdata:/var/lib/postgresql/data
 
   api:
-    build: .
+    build: ./MangaReaderAPI
     container_name: manga_api_container
     depends_on:
-      - db                                     # So our API waits for the DB to be start first
+      - db
     environment:
       ConnectionStrings__DefaultConnection: "Host=db;Port=5432;Database=MangaReaderDB;Username=postgres;Password=MANGAPASSWORD"
+      DOTNET_ENVIRONMENT: Development
     ports:
-      - "5000:80"
+      - "5000:8080"
 
 volumes:
   pgdata:
+
