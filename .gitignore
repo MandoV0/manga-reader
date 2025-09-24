@@ -1,27 +1,17 @@
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Build results
+bin/
+obj/
+
+# EF Core Migrations (optional, if you don’t want them in repo)
+# Migrations/
+
+# Node / NPM (if frontend exists)
 node_modules/
 dist/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-.env
-
-docker-compose.override.yml
-pgdata/
-*.log
-
-.DS_Store
-.AppleDouble
-.LSOverride
-
-._*
-.Spotlight-V100
-.Trashes
-Icon?
-ehthumbs.db
-Thumbs.db
-
-.vscode/
-.idea/
-
-*.tsbuildinfo

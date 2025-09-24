@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\burak\\MangaReaderAPI\\MangaReaderAPI.csproj": {}
+    "C:\\Users\\burak\\manga-reader\\MangaReaderAPI\\MangaReaderAPI.csproj": {}
   },
   "projects": {
-    "C:\\Users\\burak\\MangaReaderAPI\\MangaReaderAPI.csproj": {
+    "C:\\Users\\burak\\manga-reader\\MangaReaderAPI\\MangaReaderAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\burak\\MangaReaderAPI\\MangaReaderAPI.csproj",
+        "projectUniqueName": "C:\\Users\\burak\\manga-reader\\MangaReaderAPI\\MangaReaderAPI.csproj",
         "projectName": "MangaReaderAPI",
-        "projectPath": "C:\\Users\\burak\\MangaReaderAPI\\MangaReaderAPI.csproj",
+        "projectPath": "C:\\Users\\burak\\manga-reader\\MangaReaderAPI\\MangaReaderAPI.csproj",
         "packagesPath": "C:\\Users\\burak\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\burak\\MangaReaderAPI\\obj\\",
+        "outputPath": "C:\\Users\\burak\\manga-reader\\MangaReaderAPI\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -53,6 +53,16 @@
             "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",
               "version": "[9.0.8, )"
+            },
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[9.0.9, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[9.0.9, )"
             }
           },
           "imports": [
