@@ -1,17 +1,11 @@
-# Visual Studio
 .vs/
 *.user
 *.suo
 *.userosscache
 *.sln.docstates
 
-# Build results
 bin/
 obj/
 
-# EF Core Migrations (optional, if you don’t want them in repo)
-# Migrations/
-
-# Node / NPM (if frontend exists)
 node_modules/
 dist/
