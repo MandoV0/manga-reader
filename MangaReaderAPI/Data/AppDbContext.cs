@@ -9,8 +9,5 @@ namespace MangaReaderAPI.Data
             : base(options)
         {
         }
-
-        public DbSet<Manga> Mangas { get; set; } = null!;
-        public DbSet<Chapter> Chapters { get; set; } = null!;
     }
 }
