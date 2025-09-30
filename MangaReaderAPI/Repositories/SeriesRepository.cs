@@ -21,9 +21,9 @@ namespace MangaReaderAPI.Repositories
                 .FirstOrDefaultAsync(s => s.Id == id);
         }
 
-        public async Task<IEnumerable<Series>> GetAllSeries()
+        public async Task<IEnumerable<Series>> GetAllSeries(int page, int pageSize, string sort)
         {
-            return await _context.Series.ToListAsync();
+            return await _context.Series.OrderBy(s => s.Id).Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
         }
 
         public async Task<IEnumerable<Series>> GetTrending()

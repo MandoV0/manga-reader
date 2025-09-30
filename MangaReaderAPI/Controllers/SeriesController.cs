@@ -4,7 +4,7 @@ using MangaReaderAPI.DTOs;
 
 namespace MangaReaderAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     public class SeriesController : ControllerBase
     {
         private readonly ISeriesService _service;
@@ -19,6 +19,13 @@ namespace MangaReaderAPI.Controllers
         {
             var series = await _service.GetSeries(id);
             if (series == null) return NotFound();
+            return Ok(series);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<SeriesListDto>>> GetAllSeries([FromQuery] int page = 1, [FromQuery] int pageSize = 20, [FromQuery] string sort = "")
+        {
+            var series = await _service.GetAllSeries(page, pageSize, sort);
             return Ok(series);
         }
 

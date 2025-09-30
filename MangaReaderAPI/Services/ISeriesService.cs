@@ -9,5 +9,6 @@ namespace MangaReaderAPI.Services
         Task<IEnumerable<SeriesListDto>> GetTrending();
         Task<IEnumerable<SeriesListDto>> GetPopular();
         Task<IEnumerable<SeriesListDto>> GetRecentlyUpdated();
+        Task<IEnumerable<SeriesListDto>> GetAllSeries(int page, int pageSize, string sort);
     }
 }

@@ -24,6 +24,12 @@ namespace MangaReaderAPI.Services
             });
         }
 
+        public async Task<IEnumerable<SeriesListDto>> GetAllSeries(int page, int pageSize, string sort)
+        {
+            var series = await _repo.GetAllSeries(page, pageSize, sort);
+            return series.Select(s => new SeriesListDto { Id = s.Id, Title = s.Title });
+        }
+
         public async Task<IEnumerable<SeriesListDto>> GetPopular()
         {
             var series = await _repo.GetPopular();

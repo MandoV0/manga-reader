@@ -17,10 +17,14 @@ namespace MangaReaderAPI.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            /* Stores the ENUM SeriesStatus Value as a string */
             modelBuilder.Entity<Series>()
                 .Property(s => s.Status)
                 .HasConversion<string>();
 
+            /* Set up Many-to-Many relationship between Series and Genre.
+             * This creates a join table named "SeriesGenres" with SeriesId and GenreId as foreign keys.
+             */
             modelBuilder.Entity<Series>()
                 .HasMany(s => s.Genres)
                 .WithMany(g => g.Series)
