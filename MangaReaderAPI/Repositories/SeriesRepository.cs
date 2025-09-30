@@ -1,44 +1,44 @@
+using MangaReaderAPI.Data;
 using MangaReaderAPI.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace MangaReaderAPI.Repositories
 {
     public class SeriesRepository : ISeriesRepository
     {
-        private readonly List<Series> _series;
+        private readonly AppDbContext _context;
 
-        public SeriesRepository()
+        public SeriesRepository(AppDbContext context)
         {
-            // Data for testing
-            _series = new List<Series>
-            {
-                new Series { Id=1, Title="Example Manga 1", Author="Author A", Publisher="Publisher X", Status="Ongoing", ReleaseDate=DateTime.Now.AddMonths(-5), Genres=new List<string>{"Action","Adventure"}, AverageRating=4.2, Chapters=new List<Chapter>{ new Chapter{Id=1, Title="Chapter 1", PageCount=20, Pages=new List<string>{"page1.jpg","page2.jpg"}} } },
-                new Series { Id=2, Title="Example Manga 2", Author="Author B", Publisher="Publisher Y", Status="Completed", ReleaseDate=DateTime.Now.AddMonths(-12), Genres=new List<string>{"Romance"}, AverageRating=4.7 }
-            };
+            _context = context;
         }
 
-        public Series? GetSeries(int id)
+        public async Task<Series?> GetSeries(int id)
         {
-            return _series.FirstOrDefault(s => s.Id == id);
+            return await _context.Series
+                .Include(s => s.Genres)
+                .Include(s => s.Chapters)
+                .FirstOrDefaultAsync(s => s.Id == id);
         }
 
-        public IEnumerable<Series> GetAllSeries()
+        public async Task<IEnumerable<Series>> GetAllSeries()
         {
-            return _series;
+            return await _context.Series.ToListAsync();
         }
 
-        public IEnumerable<Series> GetTrending()
+        public async Task<IEnumerable<Series>> GetTrending()
         {
-            return _series.OrderByDescending(s => s.AverageRating).Take(5);
+            return await _context.Series.OrderByDescending(s => s.AverageRating).Take(10).ToListAsync();
         }
 
-        public IEnumerable<Series> GetPopular()
+        public async Task<IEnumerable<Series>> GetPopular()
         {
-            return _series.OrderByDescending(s => s.Chapters.Count).Take(5);
+            return await _context.Series.OrderByDescending(s => s.Chapters.Count).Take(10).ToListAsync();
         }
 
-        public IEnumerable<Series> GetRecentlyUpdated()
+        public async Task<IEnumerable<Series>> GetRecentlyUpdated()
         {
-            return _series.OrderByDescending(s => s.ReleaseDate).Take(5);
+            return await _context.Series.OrderByDescending(s => s.ReleaseDate).Take(10).ToListAsync();
         }
     }
 }

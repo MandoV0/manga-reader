@@ -4,10 +4,10 @@ namespace MangaReaderAPI.Repositories
 {
     public interface ISeriesRepository
     {
-        Series? GetSeries(int id);
-        IEnumerable<Series> GetAllSeries();
-        IEnumerable<Series> GetTrending();
-        IEnumerable<Series> GetPopular();
-        IEnumerable<Series> GetRecentlyUpdated();
+        Task<Series?> GetSeries(int id);
+        Task<IEnumerable<Series>> GetAllSeries();
+        Task<IEnumerable<Series>> GetTrending();
+        Task<IEnumerable<Series>> GetPopular();
+        Task<IEnumerable<Series>> GetRecentlyUpdated();
     }
 }

@@ -1,5 +1,7 @@
 using MangaReaderAPI.Models;
 
+using MangaReaderAPI.Models.Enums;
+
 namespace MangaReaderAPI.Models
 {
     public class Series
@@ -9,8 +11,8 @@ namespace MangaReaderAPI.Models
         public string Description { get; set; }
         public string Author { get; set; }
         public string Publisher { get; set; }
-        public string Status { get; set; } // "Ongoing", "Completed", "Cancelled"
-        public List<string> Genres { get; set; } = new();
+        public SeriesStatus Status { get; set; }
+        public ICollection<Genre> Genres { get; set; }
         public DateTime ReleaseDate { get; set; }
         public double AverageRating { get; set; }
         public List<Chapter> Chapters { get; set; } = new();
