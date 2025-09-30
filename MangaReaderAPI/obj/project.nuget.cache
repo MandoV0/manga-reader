@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "DcdtBV530T4=",
+  "dgSpecHash": "Tb5UCU8FeQA=",
   "success": true,
-  "projectFilePath": "C:\\Users\\burak\\manga-reader\\MangaReaderAPI\\MangaReaderAPI.csproj",
+  "projectFilePath": "C:\\Users\\burak\\manga-reader\\MangaReaderApi\\MangaReaderAPI.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\burak\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\burak\\.nuget\\packages\\microsoft.aspnetcore.openapi\\9.0.8\\microsoft.aspnetcore.openapi.9.0.8.nupkg.sha512",

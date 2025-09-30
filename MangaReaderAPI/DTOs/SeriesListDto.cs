@@ -3,6 +3,7 @@ namespace MangaReaderAPI.DTOs
     public class SeriesListDto
     {
         public int Id { get; set; }
-        public string Title { get; set; }
+        public required string Title { get; set; }
+        public string? CoverImageUrl { get; set; }
     }
 }

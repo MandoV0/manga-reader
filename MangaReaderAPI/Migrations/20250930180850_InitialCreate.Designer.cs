@@ -13,7 +13,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MangaReaderAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250930131421_InitialCreate")]
+    [Migration("20250930180850_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -21,6 +21,7 @@ namespace MangaReaderAPI.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
+                .HasDefaultSchema("public")
                 .HasAnnotation("ProductVersion", "9.0.9")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
@@ -38,7 +39,7 @@ namespace MangaReaderAPI.Migrations
 
                     b.HasIndex("SeriesId");
 
-                    b.ToTable("SeriesGenres", (string)null);
+                    b.ToTable("SeriesGenres", "public");
                 });
 
             modelBuilder.Entity("MangaReaderAPI.Models.Chapter", b =>
@@ -67,7 +68,7 @@ namespace MangaReaderAPI.Migrations
 
                     b.HasIndex("SeriesId");
 
-                    b.ToTable("Chapters");
+                    b.ToTable("Chapters", "public");
                 });
 
             modelBuilder.Entity("MangaReaderAPI.Models.Genre", b =>
@@ -84,7 +85,7 @@ namespace MangaReaderAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Genres");
+                    b.ToTable("Genres", "public");
                 });
 
             modelBuilder.Entity("MangaReaderAPI.Models.Rating", b =>
@@ -106,7 +107,7 @@ namespace MangaReaderAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Ratings");
+                    b.ToTable("Ratings", "public");
                 });
 
             modelBuilder.Entity("MangaReaderAPI.Models.Series", b =>
@@ -123,6 +124,9 @@ namespace MangaReaderAPI.Migrations
 
                     b.Property<double>("AverageRating")
                         .HasColumnType("double precision");
+
+                    b.Property<string>("CoverImageUrl")
+                        .HasColumnType("text");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -145,7 +149,7 @@ namespace MangaReaderAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Series");
+                    b.ToTable("Series", "public");
                 });
 
             modelBuilder.Entity("GenreSeries", b =>

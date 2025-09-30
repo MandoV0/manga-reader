@@ -27,19 +27,19 @@ namespace MangaReaderAPI.Services
         public async Task<IEnumerable<SeriesListDto>> GetAllSeries(int page, int pageSize, string sort)
         {
             var series = await _repo.GetAllSeries(page, pageSize, sort);
-            return series.Select(s => new SeriesListDto { Id = s.Id, Title = s.Title });
+            return series.Select(s => new SeriesListDto { Id = s.Id, Title = s.Title, CoverImageUrl = s.CoverImageUrl });
         }
 
         public async Task<IEnumerable<SeriesListDto>> GetPopular()
         {
             var series = await _repo.GetPopular();
-            return series.Select(s => new SeriesListDto { Id = s.Id, Title = s.Title });
+            return series.Select(s => new SeriesListDto { Id = s.Id, Title = s.Title, CoverImageUrl = s.CoverImageUrl });
         }
 
         public async Task<IEnumerable<SeriesListDto>> GetRecentlyUpdated()
         {
             var series = await _repo.GetRecentlyUpdated();
-            return series.Select(s => new SeriesListDto { Id = s.Id, Title = s.Title });
+            return series.Select(s => new SeriesListDto { Id = s.Id, Title = s.Title, CoverImageUrl = s.CoverImageUrl });
         }
 
         public async Task<SeriesDto?> GetSeries(int id)

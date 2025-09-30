@@ -17,6 +17,8 @@ namespace MangaReaderAPI.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.HasDefaultSchema("public");
+
             /* Stores the ENUM SeriesStatus Value as a string */
             modelBuilder.Entity<Series>()
                 .Property(s => s.Status)
@@ -29,6 +31,8 @@ namespace MangaReaderAPI.Data
                 .HasMany(s => s.Genres)
                 .WithMany(g => g.Series)
                 .UsingEntity(j => j.ToTable("SeriesGenres"));
+                
+            base.OnModelCreating(modelBuilder);
         }
     }
 }
