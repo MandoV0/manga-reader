@@ -53,6 +53,7 @@ namespace MangaReaderAPI.Services
                 Title = series.Title,
                 Description = series.Description,
                 Author = series.Author,
+                CoverImageUrl = series.CoverImageUrl,
                 Publisher = series.Publisher,
                 Status = series.Status.ToString(),
                 Genres = series.Genres.Select(g => g.Name).ToList(),
