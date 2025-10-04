@@ -15,14 +15,16 @@ namespace MangaReaderAPI.Services
     {
         private readonly IUserRepository _userRepo;
         private readonly PasswordHasherService _passwordHasher;
+        private readonly IJwtTokenService _jwtTokenService;
 
-        public AuthService(IUserRepository userRepo, PasswordHasherService hasher)
+        public AuthService(IUserRepository userRepo, PasswordHasherService hasher, IJwtTokenService jwtTokenService)
         {
             _userRepo = userRepo;
             _passwordHasher = hasher;
+            _jwtTokenService = jwtTokenService;
         }
 
-        public async Task<UserDto> RegisterUser(AuthRegisterDto registerDto)
+        public async Task<TokenDto> RegisterUser(AuthRegisterDto registerDto)
         {
             if (await _userRepo.GetUserByEmail(registerDto.Email) != null)
             {
@@ -47,11 +49,11 @@ namespace MangaReaderAPI.Services
 
             await _userRepo.CreateUser(user);
 
-            return new UserDto
+            var token = _jwtTokenService.GenerateToken(user.Id.ToString(), user.Email);
+
+            return new TokenDto
             {
-                Id = user.Id,
-                Username = user.Username,
-                Email = user.Email
+                Token = token
             };
         }
 
@@ -68,9 +70,12 @@ namespace MangaReaderAPI.Services
                 throw new UnauthorizedAccessException("Invalid email or password");
             }
 
-            // TODO: GENERATE JWT TOKEN!!!!!
-            var token = "";
-            throw new NotImplementedException();
+            var token = _jwtTokenService.GenerateToken(userData.Id.ToString(), userData.Email);
+
+            return new TokenDto
+            {
+                Token = token
+            };
         }
     }
 }

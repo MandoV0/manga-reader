@@ -6,7 +6,7 @@ namespace MangaReaderAPI.Services
 {
     public interface IAuthService
     {
-        Task<UserDto> RegisterUser(AuthRegisterDto registerDto);
+        Task<TokenDto> RegisterUser(AuthRegisterDto registerDto);
         Task<TokenDto> LoginUser(AuthLoginDto loginDto);
     }
 }

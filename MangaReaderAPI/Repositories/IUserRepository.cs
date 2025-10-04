@@ -1,12 +1,14 @@
-using MangaReaderAPI.DTOs;
+
 using MangaReaderAPI.Models;
+using System.Threading.Tasks;
 
 namespace MangaReaderAPI.Repositories
 {
     public interface IUserRepository
     {
-        Task<User?> GetUserByUsername(string username);
-        Task<User?> GetUserByEmail(string email);
+        Task<User> GetUserById(int userId);
+        Task<User> GetUserByEmail(string email);
+        Task<User> GetUserByUsername(string username);
         Task<User> CreateUser(User user);
     }
 }

@@ -20,10 +20,10 @@ namespace MangaReaderAPI.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult<UserDto>> Register(AuthRegisterDto registerDto)
+        public async Task<ActionResult<TokenDto>> Register(AuthRegisterDto registerDto)
         {
-            var user = await _service.RegisterUser(registerDto);
-            return CreatedAtAction(nameof(user), new { userId = user.Id }, user);
+            var token = await _service.RegisterUser(registerDto);
+            return Ok(token);
         }
 
         [HttpPost("login")]

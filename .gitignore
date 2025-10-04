@@ -9,3 +9,5 @@ obj/
 
 node_modules/
 dist/
+
+Migrations/

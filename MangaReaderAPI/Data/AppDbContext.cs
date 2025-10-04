@@ -11,6 +11,7 @@ namespace MangaReaderAPI.Data
         }
 
         public DbSet<Series> Series { get; set; }
+    public DbSet<User> Users { get; set; }
         public DbSet<Chapter> Chapters { get; set; }
         public DbSet<Rating> Ratings { get; set; }
         public DbSet<Genre> Genres { get; set; }
