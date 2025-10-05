@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "xTSxAFAvWTM=",
+  "dgSpecHash": "aIsClDMgpf0=",
   "success": true,
-  "projectFilePath": "C:\\Users\\burak\\manga-reader\\MangaReaderAPI\\MangaReaderAPI.csproj",
+  "projectFilePath": "C:\\Users\\burak\\TAEAWTATAT\\manga-reader\\MangaReaderAPI\\MangaReaderAPI.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\burak\\.nuget\\packages\\bogus\\35.6.4\\bogus.35.6.4.nupkg.sha512",
     "C:\\Users\\burak\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\burak\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\9.0.9\\microsoft.aspnetcore.authentication.jwtbearer.9.0.9.nupkg.sha512",
     "C:\\Users\\burak\\.nuget\\packages\\microsoft.aspnetcore.openapi\\9.0.8\\microsoft.aspnetcore.openapi.9.0.8.nupkg.sha512",

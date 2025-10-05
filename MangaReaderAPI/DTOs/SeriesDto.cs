@@ -10,7 +10,7 @@ namespace MangaReaderAPI.DTOs
         public string Publisher { get; set; }
         public string Status { get; set; }
         public List<string> Genres { get; set; }
-        public DateTime ReleaseDate { get; set; }
+        public DateTime ReleaseDate { get; set; } = DateTime.UtcNow;
         public double AverageRating { get; set; }
     }   
 }

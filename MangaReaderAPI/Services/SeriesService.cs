@@ -19,7 +19,6 @@ namespace MangaReaderAPI.Services
             {
                 Id = c.Id,
                 Title = c.Title,
-                PageCount = c.Pages.Count,
                 Pages = c.Pages
             });
         }
