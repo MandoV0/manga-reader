@@ -29,7 +29,21 @@ namespace MangaReaderAPI.Repositories
 
         public async Task<IEnumerable<Series>> GetTrending()
         {
-            return await _context.Series.OrderByDescending(s => s.AverageRating).Take(10).ToListAsync();
+            var since = DateTime.UtcNow.AddHours(-24);
+
+            var trendingSeries = await _context.SeriesViews
+                .Where(v => v.ViewedAt >= since)            // Last 24 Hours
+                .GroupBy(v => v.SeriesId)                   // Group by series
+                .OrderByDescending(g => g.Count())          // Most viewed first
+                .Select(g => g.Key)                         // get SeriesId
+                .Take(10)                                   // Top 10
+                .Join(_context.Series,
+                    id => id,
+                    s => s.Id,
+                    (id, s) => s)
+                .ToListAsync();
+
+            return trendingSeries;
         }
 
         public async Task<IEnumerable<Series>> GetPopular()

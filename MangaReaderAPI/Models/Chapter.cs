@@ -7,6 +7,6 @@ namespace MangaReaderAPI.Models
         public Series Series { get; set; } = null!;
         public string Title { get; set; } = null!;
         public int ViewsCount { get; set; }
-        public List<Page> Pages { get; set; } = new();
+        public List<Page> Pages { get; set; } = new();  
     }
 }
