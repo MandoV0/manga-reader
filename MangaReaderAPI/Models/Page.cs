@@ -2,6 +2,10 @@ namespace MangaReaderAPI.Models
 {
     public class Page
     {
-        public string ImageUrl { get; set; } = String.Empty;
+        public int Id { get; set; }
+        public int ChapterId { get; set; }
+        public Chapter Chapter { get; set; } = null!;
+        public int Index { get; set; } /* Page Order */
+        public string ImageUrl { get; set; } = string.Empty;
     }
 }

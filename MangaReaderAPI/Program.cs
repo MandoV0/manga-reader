@@ -22,6 +22,9 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<PasswordHasherService>();
 
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<UserTrackingService>();
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>

@@ -6,10 +6,12 @@ namespace MangaReaderAPI.Services
     public class SeriesService : ISeriesService
     {
         private readonly ISeriesRepository _repo;
+        private readonly UserTrackingService _userTracking;
 
-        public SeriesService(ISeriesRepository repo)
+        public SeriesService(ISeriesRepository repo, UserTrackingService userTrackingService)
         {
             _repo = repo;
+            _userTracking = userTrackingService;
         }
 
         public async Task<IEnumerable<ChapterDto>?> GetChapters(int seriesId)
@@ -19,7 +21,12 @@ namespace MangaReaderAPI.Services
             {
                 Id = c.Id,
                 Title = c.Title,
-                Pages = c.Pages
+                Pages = c.Pages.Select(p => new PageDto
+                {
+                    Id = p.Id,
+                    PageNumber = p.Index,
+                    ImageUrl = p.ImageUrl
+                }).ToList()
             });
         }
 
@@ -45,6 +52,27 @@ namespace MangaReaderAPI.Services
         {
             var series = await _repo.GetSeries(id);
             if (series == null) return null;
+
+            var userId = _userTracking.GetUserId();
+
+            Console.WriteLine($"USER ID: {userId}");
+            if (userId.HasValue)
+            {
+                var existingView = await _repo.GetSeriesView(series.Id, userId.Value);
+
+                if (existingView == null)
+                {
+                    await _repo.AddSeriesView(series.Id, userId.Value);
+                    series.ViewsCount += 1;
+                }
+                else
+                {
+                    existingView.ViewedAt = DateTime.UtcNow;
+                }
+
+                await _repo.SaveChangesAsync();
+            }
+
 
             return new SeriesDto
             {

@@ -40,7 +40,7 @@ namespace MangaReaderAPI.Seeding
                 .RuleFor(s => s.Author, f => f.Person.FullName)
                 .RuleFor(s => s.Publisher, f => f.Company.CompanyName())
                 .RuleFor(s => s.Status, f => f.PickRandom<SeriesStatus>())
-                .RuleFor(s => s.CoverImageUrl, f => $"https://placehold.co/300x400")
+                .RuleFor(s => s.CoverImageUrl, f => "https://placehold.co/300x400")
                 .RuleFor(s => s.ReleaseDate, f => f.Date.Past(20).ToUniversalTime())
                 .RuleFor(s => s.AverageRating, f => Math.Round(f.Random.Double(1.0, 5.0), 1))
                 .RuleFor(s => s.Genres, f => f.PickRandom(genres, f.Random.Int(1, 3)).ToList())
@@ -48,18 +48,31 @@ namespace MangaReaderAPI.Seeding
                 {
                     var chapterCount = f.Random.Int(5, 50);
                     var chapters = new List<Chapter>();
+
                     for (int i = 1; i <= chapterCount; i++)
                     {
+                        int pageCount = f.Random.Int(10, 30); // 10-30 pages per chapter
+                        var pages = new List<Page>();
+
+                        for (int j = 0; j < pageCount; j++)
+                        {
+                            pages.Add(new Page
+                            {
+                                ImageUrl = "https://placehold.co/300x400",
+                                Index = j
+                            });
+                        }
+
                         chapters.Add(new Chapter
                         {
                             Title = $"Chapter {i}",
-                            Pages = new List<string> {
-                                "https://placehold.co/500x700"
-                            }
+                            Pages = pages
                         });
                     }
+
                     return chapters;
                 });
+
 
             var seriesList = seriesFaker.Generate(seriesCount);
 

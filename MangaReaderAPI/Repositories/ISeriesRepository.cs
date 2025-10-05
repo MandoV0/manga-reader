@@ -9,5 +9,8 @@ namespace MangaReaderAPI.Repositories
         Task<IEnumerable<Series>> GetTrending();
         Task<IEnumerable<Series>> GetPopular();
         Task<IEnumerable<Series>> GetRecentlyUpdated();
+        Task<SeriesView?> GetSeriesView(int seriesId, int userId);
+        Task AddSeriesView(int seriesId, int userId);
+        Task SaveChangesAsync();
     }
 }

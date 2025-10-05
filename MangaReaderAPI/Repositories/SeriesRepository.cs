@@ -18,6 +18,7 @@ namespace MangaReaderAPI.Repositories
             return await _context.Series
                 .Include(s => s.Genres)
                 .Include(s => s.Chapters)
+                .ThenInclude(c => c.Pages)
                 .FirstOrDefaultAsync(s => s.Id == id);
         }
 
@@ -40,5 +41,18 @@ namespace MangaReaderAPI.Repositories
         {
             return await _context.Series.OrderByDescending(s => s.ReleaseDate).Take(10).ToListAsync();
         }
+
+        public async Task<SeriesView?> GetSeriesView(int seriesId, int userId)
+        {
+            return await _context.SeriesViews.FirstOrDefaultAsync(v => v.SeriesId == seriesId && v.UserId == userId);
+        }
+
+        public async Task AddSeriesView(int seriesId, int userId)
+        {
+            var view = new SeriesView { SeriesId = seriesId, UserId = userId };
+            await _context.SeriesViews.AddAsync(view);
+        }
+
+        public async Task SaveChangesAsync() => await _context.SaveChangesAsync();
     }
 }

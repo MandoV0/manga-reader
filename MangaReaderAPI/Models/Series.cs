@@ -11,6 +11,7 @@ namespace MangaReaderAPI.Models
         public string Description { get; set; }
         public string Author { get; set; }
         public string Publisher { get; set; }
+        public int ViewsCount { get; set; }
         public SeriesStatus Status { get; set; }
         public ICollection<Genre> Genres { get; set; }
         public string? CoverImageUrl { get; set; }

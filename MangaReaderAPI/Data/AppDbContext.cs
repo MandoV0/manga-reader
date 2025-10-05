@@ -11,10 +11,11 @@ namespace MangaReaderAPI.Data
         }
 
         public DbSet<Series> Series { get; set; }
-    public DbSet<User> Users { get; set; }
+        public DbSet<User> Users { get; set; }
         public DbSet<Chapter> Chapters { get; set; }
         public DbSet<Rating> Ratings { get; set; }
         public DbSet<Genre> Genres { get; set; }
+        public DbSet<SeriesView> SeriesViews { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -32,7 +33,14 @@ namespace MangaReaderAPI.Data
                 .HasMany(s => s.Genres)
                 .WithMany(g => g.Series)
                 .UsingEntity(j => j.ToTable("SeriesGenres"));
-                
+
+            /* Ensures one user can only have one view per Series.
+             * 
+             */
+            modelBuilder.Entity<SeriesView>()
+                .HasIndex(v => new { v.SeriesId, v.UserId })
+                .IsUnique();
+
             base.OnModelCreating(modelBuilder);
         }
     }
