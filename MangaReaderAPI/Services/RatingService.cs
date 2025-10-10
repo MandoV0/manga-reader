@@ -21,13 +21,16 @@ namespace MangaReaderAPI.Services
         public async Task<Rating> CreateRating(int seriesId, CreateRatingDto dto)
         {
             var userId = _userTracking.GetUserId();
-            if (!userId.HasValue) throw new UnauthorizedAccessException("User ID not found in JWT Token. Token is invalid or missing.");
+            if (!userId.HasValue)
+                throw new UnauthorizedAccessException("User ID not found in JWT Token. Token is invalid or missing.");
 
             var series = await _seriesRepo.GetSeries(seriesId);
-            if (series == null) throw new KeyNotFoundException($"Series with id {seriesId} does not exist");
+            if (series == null)
+                throw new KeyNotFoundException($"Series with id {seriesId} does not exist");
 
             var existingRating = await _repo.GetByUserAndSeries(seriesId, userId.Value);
-            if (existingRating != null) throw new InvalidOperationException("User has already rated this series");
+            if (existingRating != null)
+                throw new InvalidOperationException("User has already rated this series");
 
             var rating = new Rating
             {
@@ -40,14 +43,51 @@ namespace MangaReaderAPI.Services
             return result;
         }
 
-        public Task<Rating?> UpdateRating(int seriesId, CreateRatingDto dto)
+        public async Task<Rating?> UpdateRating(int seriesId, CreateRatingDto dto)
         {
-            throw new NotImplementedException();
+            var userId = _userTracking.GetUserId();
+            if (!userId.HasValue)
+                throw new UnauthorizedAccessException("User ID not found in JWT Token. Token is invalid or missing.");
+
+            var series = await _seriesRepo.GetSeries(seriesId);
+            if (series == null)
+                throw new KeyNotFoundException($"Series with id {seriesId} does not exist");
+
+            var existingRating = await _repo.GetByUserAndSeries(seriesId, userId.Value);
+            
+            /* Update Rating if it exists, create new one if it doesnt. */
+            if (existingRating != null)
+            {
+                existingRating.Stars = dto.Rating;
+                return await _repo.Update(existingRating);
+            }
+            else
+            {
+                var rating = new Rating
+                {
+                    UserId = userId.Value,
+                    SeriesId = seriesId,
+                    Stars = dto.Rating,
+                };
+                return await _repo.Add(rating);
+            }
         }
 
-        public Task DeleteRating(int seriesId)
+        public async Task DeleteRating(int seriesId)
         {
-            throw new NotImplementedException();
+            var userId = _userTracking.GetUserId();
+            if (!userId.HasValue)
+                throw new UnauthorizedAccessException("User ID not found in JWT Token. Token is invalid or missing.");
+
+            var series = await _seriesRepo.GetSeries(seriesId);
+            if (series == null)
+                throw new KeyNotFoundException($"Series with id {seriesId} does not exist");
+
+            var existingRating = await _repo.GetByUserAndSeries(seriesId, userId.Value);
+            if (existingRating == null)
+                throw new KeyNotFoundException($"Rating for series {seriesId} by this user does not exist");
+
+            await _repo.Delete(existingRating.Id);
         }
     }
 }

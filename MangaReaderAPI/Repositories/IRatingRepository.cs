@@ -6,7 +6,7 @@ namespace MangaReaderAPI.Repositories
     {
         Task<Rating> Add(Rating rating);
         Task<Rating?> Update(Rating rating);
-        Task Delete();
+        Task Delete(int ratingId);
         Task<Rating?> GetByUserAndSeries(int seriesId, int userId);
     }
 }

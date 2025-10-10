@@ -38,5 +38,20 @@ namespace MangaReaderAPI.Controllers
             if (updated == null) return NotFound();
             return Ok(updated);
         }
+
+        [HttpDelete]
+        [Authorize]
+        public async Task<IActionResult> DeleteRating([FromRoute] int seriesId)
+        {
+            try
+            {
+                await _service.DeleteRating(seriesId);
+                return NoContent();
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
     }
 }

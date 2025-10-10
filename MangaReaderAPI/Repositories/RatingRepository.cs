@@ -20,9 +20,9 @@ namespace MangaReaderAPI.Repositories
             return rating;
         }
 
-        public async Task Delete()
+        public async Task Delete(int ratingId)
         {
-            throw new NotImplementedException();
+            await _context.Ratings.Where(r => r.Id == ratingId).ExecuteDeleteAsync();
         }
 
         public async Task<Rating?> Update(Rating rating)
