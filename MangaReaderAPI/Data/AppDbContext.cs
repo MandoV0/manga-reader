@@ -41,6 +41,10 @@ namespace MangaReaderAPI.Data
                 .HasIndex(v => new { v.SeriesId, v.UserId })
                 .IsUnique();
 
+            modelBuilder.Entity<Rating>()
+                .HasIndex(r => new { r.SeriesId, r.UserId })
+                .IsUnique();
+
             base.OnModelCreating(modelBuilder);
         }
     }

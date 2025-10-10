@@ -5,6 +5,7 @@ using MangaReaderAPI.DTOs;
 namespace MangaReaderAPI.Controllers
 {
     [Route("api/v1/[controller]")]
+    [ApiController]
     public class SeriesController : ControllerBase
     {
         private readonly ISeriesService _service;

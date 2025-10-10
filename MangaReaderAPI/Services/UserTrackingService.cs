@@ -24,7 +24,7 @@ namespace MangaReaderAPI.Services
         {
             var user = _httpContextAccessor.HttpContext?.User;
             // Check if Token is expired and if it validated by us.
-            if (user?.Identity?.IsAuthenticated != true) return null;
+            if (user?.Identity?.IsAuthenticated != true) return null; 
             var claim = user.FindFirst(ClaimTypes.NameIdentifier);
             if (claim != null && int.TryParse(claim.Value, out var userId)) { return userId; }
             return null;

@@ -56,7 +56,7 @@ namespace MangaReaderAPI.Repositories
             return await _context.Series.OrderByDescending(s => s.ReleaseDate).Take(10).ToListAsync();
         }
 
-        public async Task<SeriesView?> GetSeriesView(int seriesId, int userId)
+        public async Task<SeriesView?> GetSeriesView(int seriesId, int userId) 
         {
             return await _context.SeriesViews.FirstOrDefaultAsync(v => v.SeriesId == seriesId && v.UserId == userId);
         }

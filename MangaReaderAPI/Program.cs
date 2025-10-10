@@ -20,6 +20,8 @@ builder.Services.AddScoped<ISeriesService, SeriesService>();
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IRatingRepository, RatingRepository>();
+builder.Services.AddScoped<IRatingService, RatingService>();
 builder.Services.AddScoped<PasswordHasherService>();
 
 builder.Services.AddHttpContextAccessor();
@@ -90,7 +92,6 @@ using (var scope = app.Services.CreateScope())
     await db.Database.MigrateAsync();
     await DatabaseSeeder.SeedAsync(db, 650);
 }
-
 
 if (app.Environment.IsDevelopment())
 {
