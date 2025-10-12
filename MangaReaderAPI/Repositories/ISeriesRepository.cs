@@ -12,5 +12,6 @@ namespace MangaReaderAPI.Repositories
         Task<SeriesView?> GetSeriesView(int seriesId, int userId);
         Task AddSeriesView(int seriesId, int userId);
         Task SaveChangesAsync();
+        Task Update(Series series);
     }
 }

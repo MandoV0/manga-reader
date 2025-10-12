@@ -68,5 +68,11 @@ namespace MangaReaderAPI.Repositories
         }
 
         public async Task SaveChangesAsync() => await _context.SaveChangesAsync();
+
+        public async Task Update(Series series)
+        {
+            _context.Series.Update(series);
+            await _context.SaveChangesAsync();
+        }
     }
 }

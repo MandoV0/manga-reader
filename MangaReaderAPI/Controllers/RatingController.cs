@@ -20,7 +20,7 @@ namespace MangaReaderAPI.Controllers
         [Authorize]
         public async Task<IActionResult> CreateRating([FromRoute] int seriesId, [FromBody] CreateRatingDto dto)
         {
-            var rating = await _service.CreateRating(seriesId, dto);
+            var rating = await _service.CreateOrUpdateRating(seriesId, dto);
 
             return CreatedAtAction(
                 nameof(SeriesController.GetSeries),
@@ -34,7 +34,7 @@ namespace MangaReaderAPI.Controllers
         [Authorize]
         public async Task<IActionResult> UpdateRating([FromRoute] int seriesId, [FromBody] CreateRatingDto dto)
         {
-            var updated = await _service.UpdateRating(seriesId, dto);
+            var updated = await _service.CreateOrUpdateRating(seriesId, dto);
             if (updated == null) return NotFound();
             return Ok(updated);
         }

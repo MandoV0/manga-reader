@@ -5,8 +5,7 @@ namespace MangaReaderAPI.Services
 {
     public interface IRatingService
     {
-        Task<Rating> CreateRating(int seriesId, CreateRatingDto dto);
-        Task<Rating?> UpdateRating(int seriesId, CreateRatingDto dto);
+        Task<Rating?> CreateOrUpdateRating(int seriesId, CreateRatingDto dto);
         Task DeleteRating(int seriesId);
     }
 }

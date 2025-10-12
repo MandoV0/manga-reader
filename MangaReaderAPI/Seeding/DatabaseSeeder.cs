@@ -51,7 +51,7 @@ namespace MangaReaderAPI.Seeding
 
                     for (int i = 1; i <= chapterCount; i++)
                     {
-                        int pageCount = f.Random.Int(10, 30); // 10-30 pages per chapter
+                        int pageCount = f.Random.Int(10, 30);
                         var pages = new List<Page>();
 
                         for (int j = 0; j < pageCount; j++)
