@@ -67,12 +67,36 @@ namespace MangaReaderAPI.Repositories
             await _context.SeriesViews.AddAsync(view);
         }
 
+        public async Task<Chapter?> GetChapterById(int id)
+        {
+            return await _context.Chapters.FirstOrDefaultAsync(c => c.Id == id);
+        }
+
         public async Task SaveChangesAsync() => await _context.SaveChangesAsync();
 
         public async Task Update(Series series)
         {
             _context.Series.Update(series);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<UserSeriesReadingHistory> CreateLastReadChapter(UserSeriesReadingHistory lastRead)
+        {
+            await _context.UserSeriesReadingHistories.AddAsync(lastRead);
+            await _context.SaveChangesAsync();
+            return lastRead;
+        }
+
+        public async Task<UserSeriesReadingHistory> UpdateLastReadChapter(UserSeriesReadingHistory lastRead)
+        {
+            _context.UserSeriesReadingHistories.Update(lastRead);
+            await _context.SaveChangesAsync();
+            return lastRead;
+        }
+
+        public async Task<List<UserSeriesReadingHistory>> GetLastReaderChapters(int userId, int limit=10, int offset=0)
+        {
+            return await _context.UserSeriesReadingHistories.Where(usr => usr.UserId == userId).OrderBy(usr => usr.Id).Skip(offset).Take(limit).ToListAsync();
         }
     }
 }

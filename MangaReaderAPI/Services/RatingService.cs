@@ -9,9 +9,9 @@ namespace MangaReaderAPI.Services
     {
         private readonly IRatingRepository _repo;
         private readonly ISeriesRepository _seriesRepo;
-        private readonly UserTrackingService _userTracking;
+        private readonly IUserTrackingService _userTracking;
 
-        public RatingService(IRatingRepository ratingRepo, ISeriesRepository seriesRepo, UserTrackingService userTrackingService)
+        public RatingService(IRatingRepository ratingRepo, ISeriesRepository seriesRepo, IUserTrackingService userTrackingService)
         {
             _repo = ratingRepo;
             _userTracking = userTrackingService;
@@ -75,6 +75,7 @@ namespace MangaReaderAPI.Services
 
             series.TotalRatings--;
             series.TotalRatingSum -= existingRating.Stars;
+            // To make sure we dont divide by zero when we delete the last rating
             series.AverageRating = series.TotalRatings > 0 ? (double) series.TotalRatingSum / series.TotalRatings : 0;
 
             await _seriesRepo.Update(series);

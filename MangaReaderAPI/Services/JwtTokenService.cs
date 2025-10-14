@@ -18,7 +18,7 @@ namespace MangaReaderAPI.Services
             _config = config;
         }
 
-        public string GenerateToken(string userId, string email, IEnumerable<string> roles = null)
+        public string GenerateToken(string userId, string email, IEnumerable<string>? roles = null)
         {
             var claims = new List<Claim>
             {
@@ -37,10 +37,14 @@ namespace MangaReaderAPI.Services
                 }
             }
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
+            if (_config["Jwt:Key"] == null || _config["Jwt:ExpireMinutes"] == null) {
+                throw new Exception("JWT Key or ExpireMinutes missing in the Configuration");
+            }
+           
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]!));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-            var expires = DateTime.UtcNow.AddMinutes(double.Parse(_config["Jwt:ExpireMinutes"]));
+            var expires = DateTime.UtcNow.AddMinutes(double.Parse(_config["Jwt:ExpireMinutes"]!));
 
             var token = new JwtSecurityToken(
                 issuer: _config["Jwt:Issuer"],

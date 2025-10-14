@@ -16,6 +16,7 @@ namespace MangaReaderAPI.Data
         public DbSet<Rating> Ratings { get; set; }
         public DbSet<Genre> Genres { get; set; }
         public DbSet<SeriesView> SeriesViews { get; set; }
+        public DbSet<UserSeriesReadingHistory> UserSeriesReadingHistories { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -26,17 +27,14 @@ namespace MangaReaderAPI.Data
                 .Property(s => s.Status)
                 .HasConversion<string>();
 
-            /* Set up Many-to-Many relationship between Series and Genre.
-             * This creates a join table named "SeriesGenres" with SeriesId and GenreId as foreign keys.
-             */
+            // Set up Many-to-Many relationship between Series and Genre.
+            // This creates a join table named "SeriesGenres" with SeriesId and GenreId as foreign keys.
             modelBuilder.Entity<Series>()
                 .HasMany(s => s.Genres)
                 .WithMany(g => g.Series)
                 .UsingEntity(j => j.ToTable("SeriesGenres"));
 
-            /* Ensures one user can only have one view per Series.
-             * 
-             */
+            /* Ensures one user can only have one view per Series. */
             modelBuilder.Entity<SeriesView>()
                 .HasIndex(v => new { v.SeriesId, v.UserId })
                 .IsUnique();
@@ -44,6 +42,24 @@ namespace MangaReaderAPI.Data
             modelBuilder.Entity<Rating>()
                 .HasIndex(r => new { r.SeriesId, r.UserId })
                 .IsUnique();
+
+            /* Reading Histories */
+            modelBuilder.Entity<UserSeriesReadingHistory>()
+                .HasIndex(x => new { x.UserId, x.SeriesId })
+                .IsUnique();
+
+            modelBuilder.Entity<UserSeriesReadingHistory>()
+                .HasOne<User>()
+                .WithMany()
+                .HasForeignKey(x => x.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<UserSeriesReadingHistory>()
+                .HasOne<Series>()
+                .WithMany()
+                .HasForeignKey(x => x.SeriesId)
+                .OnDelete(DeleteBehavior.Cascade);
+
 
             base.OnModelCreating(modelBuilder);
         }

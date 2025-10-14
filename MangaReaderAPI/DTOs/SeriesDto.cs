@@ -3,13 +3,13 @@ namespace MangaReaderAPI.DTOs
     public class SeriesDto
     {
         public int Id { get; set; }
-        public string Title { get; set; }
-        public string Description { get; set; }
-        public string? CoverImageUrl { get; set; }
-        public string Author { get; set; }
-        public string Publisher { get; set; }
-        public string Status { get; set; }
-        public List<string> Genres { get; set; }
+        public string Title { get; set; } = String.Empty;
+        public string Description { get; set; } = String.Empty;
+        public string? CoverImageUrl { get; set; } = String.Empty;
+        public string Author { get; set; } = String.Empty;
+        public string Publisher { get; set; } = String.Empty;
+        public string Status { get; set; } = String.Empty;
+        public List<string> Genres { get; set; } = new List<string>();
         public DateTime ReleaseDate { get; set; } = DateTime.UtcNow;
         public double AverageRating { get; set; }
     }   

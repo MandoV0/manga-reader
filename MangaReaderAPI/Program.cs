@@ -25,7 +25,7 @@ builder.Services.AddScoped<IRatingService, RatingService>();
 builder.Services.AddScoped<PasswordHasherService>();
 
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddScoped<UserTrackingService>();
+builder.Services.AddScoped<IUserTrackingService, UserTrackingService>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -76,7 +76,7 @@ builder.Services.AddAuthentication(options =>
         ValidIssuer = builder.Configuration["Jwt:Issuer"],
         ValidAudience = builder.Configuration["Jwt:Audience"],
         IssuerSigningKey = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])),
+            Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!)),
 
         ClockSkew = TimeSpan.Zero
     };

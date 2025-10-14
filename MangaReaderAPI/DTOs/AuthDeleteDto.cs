@@ -6,6 +6,6 @@ namespace MangaReaderAPI.DTOs
     public class AuthDeleteDto
     {
         [Required]
-        public string Password { get; set; }
+        public string Password { get; set; } = String.Empty;
     }
 }

@@ -3,7 +3,7 @@ using Microsoft.IdentityModel.JsonWebTokens;
 
 namespace MangaReaderAPI.Services
 {
-    public class UserTrackingService
+    public class UserTrackingService : IUserTrackingService
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
 

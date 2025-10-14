@@ -1,4 +1,5 @@
 using MangaReaderAPI.DTOs;
+using MangaReaderAPI.Models;
 using MangaReaderAPI.Repositories;
 
 namespace MangaReaderAPI.Services
@@ -6,9 +7,9 @@ namespace MangaReaderAPI.Services
     public class SeriesService : ISeriesService
     {
         private readonly ISeriesRepository _repo;
-        private readonly UserTrackingService _userTracking;
+        private readonly IUserTrackingService _userTracking;
 
-        public SeriesService(ISeriesRepository repo, UserTrackingService userTrackingService)
+        public SeriesService(ISeriesRepository repo, IUserTrackingService userTrackingService)
         {
             _repo = repo;
             _userTracking = userTrackingService;
@@ -93,6 +94,44 @@ namespace MangaReaderAPI.Services
         {
             var series = await _repo.GetTrending();
             return series.Select(s => new SeriesListDto { Id = s.Id, Title = s.Title });
+        }
+
+        public async Task UpdateOrCreateLastReadChapter(int seriesId, int lastReadChapterId)
+        {
+            var userId = _userTracking.GetUserId();
+            if (userId.HasValue)
+            {
+                var series = await _repo.GetSeries(seriesId);
+                if (series == null) return;
+                var chapter = await _repo.GetChapterById(lastReadChapterId);
+                if (chapter == null) return;
+                var lastRead = new UserSeriesReadingHistory
+                {
+                    SeriesId = seriesId,
+                    UserId = userId.Value,
+                    LastReadChapterId = lastReadChapterId
+                };
+                await _repo.CreateLastReadChapter(lastRead);
+                await _repo.SaveChangesAsync();
+            }
+        }
+
+        public async Task<ChapterDto?> GetChapterById(int chapterId)
+        {
+            var chapter = await _repo.GetChapterById(chapterId);
+            if (chapter == null) return null;
+            var dto = new ChapterDto
+            {
+                Id = chapter.Id,
+                Title = chapter.Title,
+                Pages = chapter.Pages.Select(p => new PageDto
+                {
+                    Id = p.Id,
+                    PageNumber = p.Index,
+                    ImageUrl = p.ImageUrl
+                }).ToList()
+            };
+            return dto;
         }
     }
 }

@@ -7,9 +7,9 @@ namespace MangaReaderAPI.DTOs
     {
         [Required]
         [EmailAddress]
-        public string Email { get; set; }
+        public string Email { get; set; } = String.Empty;
 
         [Required]
-        public string Password { get; set; }
+        public string Password { get; set; } = String.Empty;
     }
 }

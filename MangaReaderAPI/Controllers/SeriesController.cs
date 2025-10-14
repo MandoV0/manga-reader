@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MangaReaderAPI.Services;
 using MangaReaderAPI.DTOs;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MangaReaderAPI.Controllers
 {
@@ -58,5 +59,14 @@ namespace MangaReaderAPI.Controllers
             var series = await _service.GetRecentlyUpdated();
             return Ok(series);
         }
+
+        [HttpPost("last-read")]
+        [Authorize]
+        public async Task<IActionResult> UpdateLastReadChapter(int seriesId, int lastReadChapterId)
+        {
+            await _service.UpdateOrCreateLastReadChapter(seriesId, lastReadChapterId);
+            return Ok();
+        }
+
     }
 }
