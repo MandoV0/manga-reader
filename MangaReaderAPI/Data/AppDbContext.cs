@@ -17,6 +17,7 @@ namespace MangaReaderAPI.Data
         public DbSet<Genre> Genres { get; set; }
         public DbSet<SeriesView> SeriesViews { get; set; }
         public DbSet<UserSeriesReadingHistory> UserSeriesReadingHistories { get; set; }
+        public DbSet<UserForgotPassword> UserForgotPasswords { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

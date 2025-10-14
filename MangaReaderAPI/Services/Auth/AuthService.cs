@@ -12,17 +12,19 @@ using System.Threading.Tasks;
 
 namespace MangaReaderAPI.Services
 {
-    public class AuthService : IAuthService
+    public class AuthService : IAuthService, IUserForgotPasswordService
     {
         private readonly IUserRepository _userRepo;
         private readonly PasswordHasherService _passwordHasher;
         private readonly IJwtTokenService _jwtTokenService;
+        private readonly IForgotPasswordRepository _forgotPasswordRepo;
 
-        public AuthService(IUserRepository userRepo, PasswordHasherService hasher, IJwtTokenService jwtTokenService)
+        public AuthService(IUserRepository userRepo, IForgotPasswordRepository forgotPasswordRepo, PasswordHasherService hasher, IJwtTokenService jwtTokenService)
         {
             _userRepo = userRepo;
             _passwordHasher = hasher;
             _jwtTokenService = jwtTokenService;
+            _forgotPasswordRepo = forgotPasswordRepo;
         }
 
         public async Task<TokenDto> RegisterUser(AuthRegisterDto registerDto)
@@ -77,6 +79,39 @@ namespace MangaReaderAPI.Services
             {
                 Token = token
             };
+        }
+
+        public async Task RequestPasswordResetAsync(string email)
+        {
+            var user = await _userRepo.GetUserByEmail(email);
+            if (user == null) return;
+
+            var forgotPasswordEntry = new UserForgotPassword
+            {
+                UserId = user.Id,
+                ResetToken = Guid.NewGuid().ToString(),
+                Expiry = DateTime.UtcNow.AddHours(1),
+                Used = false
+            };
+
+            await _forgotPasswordRepo.AddAsync(forgotPasswordEntry);
+        }
+
+        public async Task ResetPasswordAsync(string token, string email, string newPassword)
+        {
+            var user = await _userRepo.GetUserByEmail(email);
+            if (user == null) return;
+
+            var forgotPasswordEntry = await _forgotPasswordRepo.GetByTokenAsync(token);
+            if (forgotPasswordEntry == null || forgotPasswordEntry.UserId != user.Id || forgotPasswordEntry.Expiry < DateTime.UtcNow)
+            {
+                return;
+            }
+
+
+
+            await _userRepo.UpdateAsync(user);
+            await _forgotPasswordRepo.DeleteAsync(forgotPasswordEntry);
         }
     }
 }

@@ -25,6 +25,8 @@ builder.Services.AddScoped<IRatingRepository, RatingRepository>();
 builder.Services.AddScoped<IRatingService, RatingService>();
 builder.Services.AddScoped<PasswordHasherService>();
 
+builder.Services.AddTransient<IEmailService, EmailService>();
+
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IUserTrackingService, UserTrackingService>();
 

@@ -32,5 +32,14 @@ namespace MangaReaderAPI.Controllers
             var token = await _service.LoginUser(loginDto);
             return Ok(token);
         }
+
+        [HttpPost("forgot-password")]
+        /// <summary>
+        /// Calls Email Service to send a email for password reset to the user.
+        /// </summary>
+        public async Task ForgotPassword(string email)
+        {
+            
+        }
     }
 }
