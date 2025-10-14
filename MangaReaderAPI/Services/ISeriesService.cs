@@ -11,7 +11,8 @@ namespace MangaReaderAPI.Services
         Task<IEnumerable<SeriesListDto>> GetTrending();
         Task<IEnumerable<SeriesListDto>> GetPopular();
         Task<IEnumerable<SeriesListDto>> GetRecentlyUpdated();
-        Task<IEnumerable<SeriesListDto>> GetAllSeries(int page, int pageSize, string sort);
+        Task<PagedResponseDto<SeriesListDto>> GetAllSeries(int page, int pageSize, string sort);
         Task UpdateOrCreateLastReadChapter(int seriesId, int lastReadChapterId);
+        Task<IEnumerable<LastReadChapterDto>> GetLastReadChapters(int limit = 10, int offset = 0);
     }
 }

@@ -3,6 +3,7 @@ using MangaReaderAPI.Data;
 using MangaReaderAPI.DTOs;
 using MangaReaderAPI.Models;
 using MangaReaderAPI.Repositories;
+using MangaReaderAPI.Exceptions;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 
 using System;
@@ -28,12 +29,12 @@ namespace MangaReaderAPI.Services
         {
             if (await _userRepo.GetUserByEmail(registerDto.Email) != null)
             {
-                throw new Exception("Email already in use.");
+                throw new EmailAlreadyExistsException(registerDto.Email);
             }
 
             if (await _userRepo.GetUserByUsername(registerDto.Username) != null)
             {
-                throw new Exception("Username already in use.");
+                throw new UsernameAlreadyExistsException(registerDto.Username);
             }
 
             byte[] userSalt = _passwordHasher.GenerateSalt();
@@ -62,12 +63,12 @@ namespace MangaReaderAPI.Services
             var userData = await _userRepo.GetUserByEmail(loginDto.Email);
             if (userData == null)
             {
-                throw new UnauthorizedAccessException("Invalid email or password");
+                throw new InvalidCredentialsException();
             }
 
             if (!_passwordHasher.VerifyPassword(loginDto.Password, userData.PasswordHash, userData.Salt))
             {
-                throw new UnauthorizedAccessException("Invalid email or password");
+                throw new InvalidCredentialsException();
             }
 
             var token = _jwtTokenService.GenerateToken(userData.Id.ToString(), userData.Email);

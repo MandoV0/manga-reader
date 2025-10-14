@@ -23,7 +23,5 @@ namespace MangaReaderAPI.Models
 
         public double AverageRating { get; set; }
         public List<Chapter> Chapters { get; set; } = new();
-
-        public ICollection<UserSeriesReadingHistory> ReadingHistories { get; set; } = new List<UserSeriesReadingHistory>();
     }
 }

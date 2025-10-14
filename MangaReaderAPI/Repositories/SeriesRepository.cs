@@ -24,7 +24,27 @@ namespace MangaReaderAPI.Repositories
 
         public async Task<IEnumerable<Series>> GetAllSeries(int page, int pageSize, string sort)
         {
-            return await _context.Series.OrderBy(s => s.Id).Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+            var query = _context.Series.AsQueryable();
+
+            query = sort.ToLower() switch
+            {
+                "title" => query.OrderBy(s => s.Title),
+                "title_desc" => query.OrderByDescending(s => s.Title),
+                "rating" => query.OrderByDescending(s => s.AverageRating),
+                "rating_desc" => query.OrderBy(s => s.AverageRating),
+                "updated" => query.OrderByDescending(s => s.ReleaseDate),
+                "updated_desc" => query.OrderBy(s => s.ReleaseDate),
+                "release" => query.OrderByDescending(s => s.ReleaseDate),
+                "release_desc" => query.OrderBy(s => s.ReleaseDate),
+                _ => query.OrderBy(s => s.Id)
+            };
+
+            return await query.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+        }
+
+        public async Task<int> GetTotalSeriesCount()
+        {
+            return await _context.Series.CountAsync();
         }
 
         public async Task<IEnumerable<Series>> GetTrending()
@@ -69,7 +89,9 @@ namespace MangaReaderAPI.Repositories
 
         public async Task<Chapter?> GetChapterById(int id)
         {
-            return await _context.Chapters.FirstOrDefaultAsync(c => c.Id == id);
+            return await _context.Chapters
+                .Include(c => c.Pages)
+                .FirstOrDefaultAsync(c => c.Id == id);
         }
 
         public async Task SaveChangesAsync() => await _context.SaveChangesAsync();
@@ -94,7 +116,12 @@ namespace MangaReaderAPI.Repositories
             return lastRead;
         }
 
-        public async Task<List<UserSeriesReadingHistory>> GetLastReaderChapters(int userId, int limit=10, int offset=0)
+        public async Task<UserSeriesReadingHistory?> GetLastReadChapter(int userId, int seriesId)
+        {
+            return await _context.UserSeriesReadingHistories.FirstOrDefaultAsync(usr => usr.UserId == userId && usr.SeriesId == seriesId);
+        }
+
+        public async Task<List<UserSeriesReadingHistory>> GetLastReadChapters(int userId, int limit = 10, int offset = 0)
         {
             return await _context.UserSeriesReadingHistories.Where(usr => usr.UserId == userId).OrderBy(usr => usr.Id).Skip(offset).Take(limit).ToListAsync();
         }

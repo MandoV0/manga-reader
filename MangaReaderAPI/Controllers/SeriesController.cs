@@ -25,8 +25,11 @@ namespace MangaReaderAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<SeriesListDto>>> GetAllSeries([FromQuery] int page = 1, [FromQuery] int pageSize = 20, [FromQuery] string sort = "")
+        public async Task<ActionResult<PagedResponseDto<SeriesListDto>>> GetAllSeries([FromQuery] int page = 1, [FromQuery] int pageSize = 20, [FromQuery] string sort = "")
         {
+            if (page < 1) page = 1;
+            if (pageSize < 1 || pageSize > 100) pageSize = 20;
+            
             var series = await _service.GetAllSeries(page, pageSize, sort);
             return Ok(series);
         }
@@ -62,11 +65,26 @@ namespace MangaReaderAPI.Controllers
 
         [HttpPost("last-read")]
         [Authorize]
-        public async Task<IActionResult> UpdateLastReadChapter(int seriesId, int lastReadChapterId)
+        public async Task<IActionResult> UpdateLastReadChapter([FromBody] UpdateLastReadChapterDto dto)
         {
-            await _service.UpdateOrCreateLastReadChapter(seriesId, lastReadChapterId);
+            await _service.UpdateOrCreateLastReadChapter(dto.SeriesId, dto.LastReadChapterId);
             return Ok();
         }
 
+        [HttpGet("last-read")]
+        [Authorize]
+        public async Task<ActionResult<IEnumerable<LastReadChapterDto>>> GetLastReadChapters([FromQuery] int limit = 10, [FromQuery] int offset = 0)
+        {
+            var lastReadChapters = await _service.GetLastReadChapters(limit, offset);
+            return Ok(lastReadChapters);
+        }
+
+        [HttpGet("chapters/{chapterId}")]
+        public async Task<ActionResult<ChapterDto>> GetChapterById(int chapterId)
+        {
+            var chapter = await _service.GetChapterById(chapterId);
+            if (chapter == null) return NotFound();
+            return Ok(chapter);
+        }
     }
 }

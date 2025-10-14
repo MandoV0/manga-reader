@@ -8,11 +8,13 @@ namespace MangaReaderAPI.Services
     {
         private readonly ISeriesRepository _repo;
         private readonly IUserTrackingService _userTracking;
+        private readonly ILogger<SeriesService> _logger;
 
-        public SeriesService(ISeriesRepository repo, IUserTrackingService userTrackingService)
+        public SeriesService(ISeriesRepository repo, IUserTrackingService userTrackingService, ILogger<SeriesService> logger)
         {
             _repo = repo;
             _userTracking = userTrackingService;
+            _logger = logger;
         }
 
         public async Task<IEnumerable<ChapterDto>?> GetChapters(int seriesId)
@@ -31,10 +33,20 @@ namespace MangaReaderAPI.Services
             });
         }
 
-        public async Task<IEnumerable<SeriesListDto>> GetAllSeries(int page, int pageSize, string sort)
+        public async Task<PagedResponseDto<SeriesListDto>> GetAllSeries(int page, int pageSize, string sort)
         {
             var series = await _repo.GetAllSeries(page, pageSize, sort);
-            return series.Select(s => new SeriesListDto { Id = s.Id, Title = s.Title, CoverImageUrl = s.CoverImageUrl });
+            var totalCount = await _repo.GetTotalSeriesCount();
+            
+            var seriesDtos = series.Select(s => new SeriesListDto { Id = s.Id, Title = s.Title, CoverImageUrl = s.CoverImageUrl });
+            
+            return new PagedResponseDto<SeriesListDto>
+            {
+                Items = seriesDtos,
+                Page = page,
+                PageSize = pageSize,
+                TotalCount = totalCount
+            };
         }
 
         public async Task<IEnumerable<SeriesListDto>> GetPopular()
@@ -56,7 +68,7 @@ namespace MangaReaderAPI.Services
 
             var userId = _userTracking.GetUserId();
 
-            Console.WriteLine($"USER ID: {userId}");
+            _logger.LogDebug("Retrieved user ID: {UserId} for series: {SeriesId}", userId, series.Id);
             if (userId.HasValue)
             {
                 var existingView = await _repo.GetSeriesView(series.Id, userId.Value);
@@ -73,7 +85,6 @@ namespace MangaReaderAPI.Services
 
                 await _repo.SaveChangesAsync();
             }
-
 
             return new SeriesDto
             {
@@ -93,18 +104,29 @@ namespace MangaReaderAPI.Services
         public async Task<IEnumerable<SeriesListDto>> GetTrending()
         {
             var series = await _repo.GetTrending();
-            return series.Select(s => new SeriesListDto { Id = s.Id, Title = s.Title });
+            return series.Select(s => new SeriesListDto { Id = s.Id, Title = s.Title, CoverImageUrl = s.CoverImageUrl });
         }
 
         public async Task UpdateOrCreateLastReadChapter(int seriesId, int lastReadChapterId)
         {
             var userId = _userTracking.GetUserId();
-            if (userId.HasValue)
+            if (!userId.HasValue) return;
+
+            var series = await _repo.GetSeries(seriesId);
+            if (series == null) return;
+
+            var chapter = await _repo.GetChapterById(lastReadChapterId);
+            if (chapter == null) return;
+
+            var lastReadChapter = await _repo.GetLastReadChapter(userId.Value, series.Id);
+
+            if (lastReadChapter != null)
             {
-                var series = await _repo.GetSeries(seriesId);
-                if (series == null) return;
-                var chapter = await _repo.GetChapterById(lastReadChapterId);
-                if (chapter == null) return;
+                lastReadChapter.LastReadChapterId = lastReadChapterId;
+                await _repo.UpdateLastReadChapter(lastReadChapter);
+            }
+            else
+            {
                 var lastRead = new UserSeriesReadingHistory
                 {
                     SeriesId = seriesId,
@@ -112,8 +134,36 @@ namespace MangaReaderAPI.Services
                     LastReadChapterId = lastReadChapterId
                 };
                 await _repo.CreateLastReadChapter(lastRead);
-                await _repo.SaveChangesAsync();
             }
+        }
+
+        public async Task<IEnumerable<LastReadChapterDto>> GetLastReadChapters(int limit = 10, int offset = 0)
+        {
+            var userId = _userTracking.GetUserId();
+            if (!userId.HasValue) return Enumerable.Empty<LastReadChapterDto>();
+
+            var lastReadChapters = await _repo.GetLastReadChapters(userId.Value, limit, offset);
+            var lastReadChapterDtos = new List<LastReadChapterDto>();
+
+            foreach (var lastReadChapter in lastReadChapters)
+            {
+                var series = await _repo.GetSeries(lastReadChapter.SeriesId);
+                var chapter = await _repo.GetChapterById(lastReadChapter.LastReadChapterId);
+
+                if (series != null && chapter != null)
+                {
+                    lastReadChapterDtos.Add(new LastReadChapterDto
+                    {
+                        SeriesId = series.Id,
+                        ChapterId = chapter.Id,
+                        SeriesTitle = series.Title,
+                        ChapterTitle = chapter.Title,
+                        CoverImageUrl = series.CoverImageUrl ?? string.Empty
+                    });
+                }
+            }
+
+            return lastReadChapterDtos;
         }
 
         public async Task<ChapterDto?> GetChapterById(int chapterId)
