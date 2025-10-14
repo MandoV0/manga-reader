@@ -1,55 +1,45 @@
 ## TODO
+- ** MVP **
+  - Email Verification
+  - Password Reset/Change
+  - User Profile Management (Delete User Profile)
 
-- **Core auth** [Done completely]
-  - Implement JWT auth: signup/login, password hashing, token issuance, middleware
-  - Protect endpoints with `[Authorize]` and configure JWT bearer in startup
-  - Configure Swagger with JWT security scheme
+  - Series Bookmarks
+  - Searching
+  - GET: All available Genres endpoint
+  - Input Validation for all DTOs
+  - Standardize DTOs 
 
-- **Users** [On Hold as i want to try OAuth out later.]
-  - Add `User` entity/DbSet
-  - Endpoints: GET/PUT `user/profile`, DELETE `user/account`
-  - DTOs: `UserProfileDto`
+  - Unit Tests
 
-- **Saved series**
-  - Add user–series join entity
-  - Endpoints: GET/POST/DELETE `user/saved-series` with pagination
 
-- **Reading history**
-  - Add `ReadingHistory` entity
-  - Endpoints: GET/POST `user/history` with pagination
+# Standardize DTOs
+For the Folder structure inside the DTOs Folder do User/Auth/Series/Chapter Folders
+## Client Input
+Use this naming Convention:
+Create*Dto
+Update*Dto
+*RequestDto
 
-- **Ratings** [Almost done Just need to recalculate the average rating of a Series after a User Creates/Updates/Deletes a review]
-  - Add ratings for series and chapters
-  - Endpoints: POST `/series/{seriesId}/rate`, `/chapters/{chapterId}/rate`
-  - Update and persist average ratings
+## Server Response
+*Dto
+*ListDto
 
-- **Reviews** [Scrapped, just doing ratings and could easily add optional comments later. ]]
-  - Add `Review` entity
-  - Endpoints: list for series, create, update, delete
-  - DTOs: `ReviewDto`
- 
-- **Chapters API**
-  - Endpoints: GET `/chapters/{chapterId}`, GET `/chapters/{chapterId}/pages` with pagination
+# Password Reset/Change
+We will need these Endpoints
+- `POST /auth/forgot-password`
+- `POST /auth/reset-password`
+- `PUT /auth/change-password` [authenticated endpoint]
 
-- **Search**
-  - Implement `/search` with query, include/exclude genres, status, sort, pagination
+For forgot and reset password we simply send a email to the User.
 
-- **Genres**
-  - Implement `/genres` list
+# User Profile
+We need to add cascade deletes so we delete all User data when a User wants to delete his account.
 
-- **Series**
-  - Enhance GET `/series` to honor sort options per spec
-  - Return pagination metadata (e.g., `PaginatedResponse<T>`)
+# Genre Controller
+Create a Genre Controller.
+It has only one endpoint which returns all Genres we have.
+- `GET /genres`
 
-- **DTOs and responses**
-  - Add `PaginatedResponse<T>`, rating request DTOs
-
-- **Data layer**
-  - Extend EF model with new entities/relationships
-  - Create and run migrations
-  - Update `seed.sql` for new data
-
-- **Quality**
-  - Add validation (DataAnnotations/FluentValidation) and error handling middleware
-  - Optional: caching for trending/popular/recent
-  - Optional: unit tests for new services/repositories
+# Unit Tests
+Add Unit tests 

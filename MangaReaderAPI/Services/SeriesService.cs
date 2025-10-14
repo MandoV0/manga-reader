@@ -8,13 +8,11 @@ namespace MangaReaderAPI.Services
     {
         private readonly ISeriesRepository _repo;
         private readonly IUserTrackingService _userTracking;
-        private readonly ILogger<SeriesService> _logger;
 
-        public SeriesService(ISeriesRepository repo, IUserTrackingService userTrackingService, ILogger<SeriesService> logger)
+        public SeriesService(ISeriesRepository repo, IUserTrackingService userTrackingService)
         {
             _repo = repo;
             _userTracking = userTrackingService;
-            _logger = logger;
         }
 
         public async Task<IEnumerable<ChapterDto>?> GetChapters(int seriesId)
@@ -68,7 +66,6 @@ namespace MangaReaderAPI.Services
 
             var userId = _userTracking.GetUserId();
 
-            _logger.LogDebug("Retrieved user ID: {UserId} for series: {SeriesId}", userId, series.Id);
             if (userId.HasValue)
             {
                 var existingView = await _repo.GetSeriesView(series.Id, userId.Value);
