@@ -180,5 +180,36 @@ namespace MangaReaderAPI.Services
             };
             return dto;
         }
+
+        public async Task TrackSeriesView(int seriesId)
+        {
+            var userId = _userTracking.GetUserId();
+            if (!userId.HasValue) return;
+
+            var series = await _repo.GetSeries(seriesId);
+            if (series == null) return;
+
+            var existingView = await _repo.GetSeriesView(seriesId, userId.Value);
+
+            if (existingView == null)
+            {
+                await _repo.AddSeriesView(seriesId, userId.Value);
+                series.ViewsCount += 1;
+            }
+            else
+            {
+                existingView.ViewedAt = DateTime.UtcNow;
+            }
+
+            await _repo.SaveChangesAsync();
+        }
+
+        public async Task ClearAllReadingHistory()
+        {
+            var userId = _userTracking.GetUserId();
+            if (!userId.HasValue) return;
+
+            await _repo.ClearAllReadingHistory(userId.Value);
+        }
     }
 }

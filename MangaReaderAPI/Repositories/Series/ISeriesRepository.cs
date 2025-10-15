@@ -18,6 +18,7 @@ namespace MangaReaderAPI.Repositories
         Task<UserSeriesReadingHistory> UpdateLastReadChapter(UserSeriesReadingHistory lastRead);
         Task<UserSeriesReadingHistory?> GetLastReadChapter(int userId, int seriesId);
         Task<List<UserSeriesReadingHistory>> GetLastReadChapters(int userId, int limit = 10, int offset = 0);
+        Task ClearAllReadingHistory(int userId);
         Task SaveChangesAsync();
         Task Update(Series series);
     }

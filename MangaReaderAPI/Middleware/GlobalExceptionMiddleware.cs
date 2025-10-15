@@ -71,6 +71,26 @@ namespace MangaReaderAPI.Middleware
                     context.Response.StatusCode = (int) HttpStatusCode.Unauthorized;
                     break;
 
+                case InvalidPasswordResetTokenException:
+                    response = new
+                    {
+                        title = "Invalid password reset token",
+                        status = (int)HttpStatusCode.BadRequest,
+                        detail = exception.Message
+                    };
+                    context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    break;
+
+                case ExpiredPasswordResetTokenException:
+                    response = new
+                    {
+                        title = "Expired password reset token",
+                        status = (int)HttpStatusCode.BadRequest,
+                        detail = exception.Message
+                    };
+                    context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    break;
+
                 default:
                     context.Response.StatusCode = (int) HttpStatusCode.InternalServerError;
                     break;

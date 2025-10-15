@@ -39,6 +39,22 @@ namespace MangaReaderAPI.Controllers
             return Ok(updated);
         }
 
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> GetUserRating([FromRoute] int seriesId)
+        {
+            try
+            {
+                var rating = await _service.GetUserRating(seriesId);
+                if (rating == null) return NotFound();
+                return Ok(rating);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
+        }
+
         [HttpDelete]
         [Authorize]
         public async Task<IActionResult> DeleteRating([FromRoute] int seriesId)

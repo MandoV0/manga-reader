@@ -86,5 +86,21 @@ namespace MangaReaderAPI.Controllers
             if (chapter == null) return NotFound();
             return Ok(chapter);
         }
+
+        [HttpPost("{id}/view")]
+        [Authorize]
+        public async Task<IActionResult> TrackSeriesView(int id)
+        {
+            await _service.TrackSeriesView(id);
+            return Ok();
+        }
+
+        [HttpDelete("reading-history")]
+        [Authorize]
+        public async Task<IActionResult> ClearReadingHistory()
+        {
+            await _service.ClearAllReadingHistory();
+            return NoContent();
+        }
     }
 }

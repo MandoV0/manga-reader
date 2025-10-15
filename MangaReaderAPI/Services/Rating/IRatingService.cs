@@ -7,5 +7,6 @@ namespace MangaReaderAPI.Services
     {
         Task<Rating?> CreateOrUpdateRating(int seriesId, CreateRatingDto dto);
         Task DeleteRating(int seriesId);
+        Task<Rating?> GetUserRating(int seriesId);
     }
 }

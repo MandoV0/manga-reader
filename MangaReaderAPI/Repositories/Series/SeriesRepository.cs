@@ -125,5 +125,12 @@ namespace MangaReaderAPI.Repositories
         {
             return await _context.UserSeriesReadingHistories.Where(usr => usr.UserId == userId).OrderBy(usr => usr.Id).Skip(offset).Take(limit).ToListAsync();
         }
+
+        public async Task ClearAllReadingHistory(int userId)
+        {
+            var histories = await _context.UserSeriesReadingHistories.Where(usr => usr.UserId == userId).ToListAsync();
+            _context.UserSeriesReadingHistories.RemoveRange(histories);
+            await _context.SaveChangesAsync();
+        }
     }
 }

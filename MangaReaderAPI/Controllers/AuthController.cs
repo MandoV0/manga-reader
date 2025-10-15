@@ -5,6 +5,7 @@ using MangaReaderAPI.DTOs;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using MangaReaderAPI.DTOs.Auth;
 
 namespace MangaReaderAPI.Controllers
 {
@@ -49,6 +50,39 @@ namespace MangaReaderAPI.Controllers
         {
             await _service.ResetPasswordAsync(token, email, newPassword);
             return Ok();
+        }
+
+        [HttpPost("change-password")]
+        [Authorize]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequestDto request)
+        {
+            var userEmail = User.FindFirst(ClaimTypes.Email)?.Value;
+            if (userEmail == null)
+            {
+                return Unauthorized();
+            }
+
+            await _service.ChangePasswordAsync(userEmail, request.CurrentPassword, request.NewPassword);
+            return Ok();
+        }
+
+        [HttpDelete("user")]
+        [Authorize]
+        public async Task<IActionResult> DeleteUser()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+
+            var result = await _service.DeleteUserAsync(int.Parse(userId));
+            if (!result)
+            {
+                return NotFound();
+            }
+
+            return NoContent();
         }
     }
 }

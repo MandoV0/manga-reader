@@ -81,5 +81,14 @@ namespace MangaReaderAPI.Services
             await _seriesRepo.Update(series);
             await _repo.Delete(existingRating.Id);
         }
+
+        public async Task<Rating?> GetUserRating(int seriesId)
+        {
+            var userId = _userTracking.GetUserId();
+            if (!userId.HasValue)
+                throw new UnauthorizedAccessException("User ID not found in JWT Token.");
+
+            return await _repo.GetByUserAndSeries(seriesId, userId.Value);
+        }
     }
 }

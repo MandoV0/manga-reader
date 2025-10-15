@@ -1,10 +1,13 @@
 
 using MangaReaderAPI.Data;
-using MangaReaderAPI.DTOs;
-using MangaReaderAPI.Models;
-using MangaReaderAPI.Repositories;
 using MangaReaderAPI.Exceptions;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using Microsoft.Extensions.Options;
+using MangaReaderAPI.Configuration;
+using MangaReaderAPI.DTOs;
+using MangaReaderAPI.DTOs.Auth;
+using MangaReaderAPI.Repositories;
+using MangaReaderAPI.Models;
 
 using System;
 using System.Security.Cryptography;
@@ -19,14 +22,16 @@ namespace MangaReaderAPI.Services
         private readonly IJwtTokenService _jwtTokenService;
         private readonly IForgotPasswordRepository _forgotPasswordRepo;
         private readonly IEmailService _emailService;
+        private readonly FrontendSettings _frontendSettings;
 
-        public AuthService(IUserRepository userRepo, IForgotPasswordRepository forgotPasswordRepo, PasswordHasherService hasher, IJwtTokenService jwtTokenService, IEmailService emailService)
+        public AuthService(IUserRepository userRepo, IForgotPasswordRepository forgotPasswordRepo, PasswordHasherService hasher, IJwtTokenService jwtTokenService, IEmailService emailService, IOptions<FrontendSettings> frontendSettingsOptions)
         {
             _userRepo = userRepo;
             _passwordHasher = hasher;
             _jwtTokenService = jwtTokenService;
             _forgotPasswordRepo = forgotPasswordRepo;
             _emailService = emailService;
+            _frontendSettings = frontendSettingsOptions.Value;
         }
 
         public async Task<TokenDto> RegisterUser(RegisterRequestDto registerDto)
@@ -88,7 +93,6 @@ namespace MangaReaderAPI.Services
             var user = await _userRepo.GetUserByEmail(email);
             if (user == null) return;
 
-
             var resetToken = Guid.NewGuid().ToString();
             var forgotPasswordEntry = new UserForgotPassword
             {
@@ -98,7 +102,7 @@ namespace MangaReaderAPI.Services
                 Used = false
             };
 
-            var resetLink = $"http://localhost:5110/auth/reset-password?token={resetToken}&email={email}";
+            var resetLink = $"{_frontendSettings.ResetPasswordUrl}?token={resetToken}&email={email}";
             var emailContent = $"<p>You requested a password reset. Click the link below to reset your password:</p><p><a href='{resetLink}'>Reset Password</a></p>";
 
             await _emailService.SendEmailAsync(email, "Password Reset", emailContent);
@@ -109,17 +113,25 @@ namespace MangaReaderAPI.Services
         public async Task ResetPasswordAsync(string token, string email, string newPassword)
         {
             var user = await _userRepo.GetUserByEmail(email);
-            if (user == null) return;
+            if (user == null)
+            {
+                throw new InvalidCredentialsException();
+            }
 
             var forgotPasswordEntry = await _forgotPasswordRepo.GetByTokenAsync(token);
-            if (forgotPasswordEntry == null || forgotPasswordEntry.UserId != user.Id || forgotPasswordEntry.Expiry < DateTime.UtcNow)
+            if (forgotPasswordEntry == null || forgotPasswordEntry.UserId != user.Id)
             {
-                return;
+                throw new InvalidPasswordResetTokenException();
+            }
+
+            if (forgotPasswordEntry.Expiry < DateTime.UtcNow)
+            {
+                throw new ExpiredPasswordResetTokenException();
             }
 
             if (forgotPasswordEntry.Used)
             {
-                return;
+                throw new InvalidPasswordResetTokenException();
             }
 
             byte[] userSalt = _passwordHasher.GenerateSalt();
@@ -133,9 +145,39 @@ namespace MangaReaderAPI.Services
             await _forgotPasswordRepo.DeleteAsync(forgotPasswordEntry);
         }
 
-        public Task ChangePasswordAsync(string email, string currentPassword, string newPassword)
+                public async Task ChangePasswordAsync(string email, string currentPassword, string newPassword)
         {
-            throw new NotImplementedException();
+            var user = await _userRepo.GetUserByEmail(email);
+            if (user == null)
+            {
+                throw new InvalidCredentialsException();
+            }
+
+            if (!_passwordHasher.VerifyPassword(currentPassword, user.PasswordHash, user.Salt))
+            {
+                throw new InvalidCredentialsException();
+            }
+
+            byte[] userSalt = _passwordHasher.GenerateSalt();
+            string hashedPassword = _passwordHasher.HashPassword(newPassword, userSalt);
+
+            user.UpdatedAt = DateTime.UtcNow;
+            user.PasswordHash = hashedPassword;
+            user.Salt = Convert.ToBase64String(userSalt);
+
+            await _userRepo.UpdateAsync(user);
+        }
+
+        public async Task<bool> DeleteUserAsync(int userId)
+        {
+            var user = await _userRepo.GetUserById(userId);
+            if (user == null)
+            {
+                return false;
+            }
+
+            await _userRepo.DeleteUserAsync(user);
+            return true;
         }
     }
 }

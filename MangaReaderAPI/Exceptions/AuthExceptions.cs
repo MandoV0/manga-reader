@@ -14,4 +14,14 @@ namespace MangaReaderAPI.Exceptions
     {
         public InvalidCredentialsException() : base("Invalid email or password") { }
     }
+
+    public class InvalidPasswordResetTokenException : Exception
+    {
+        public InvalidPasswordResetTokenException() : base("Invalid password reset token.") { }
+    }
+
+    public class ExpiredPasswordResetTokenException : Exception
+    {
+        public ExpiredPasswordResetTokenException() : base("Password reset token has expired.") { }
+    }
 }

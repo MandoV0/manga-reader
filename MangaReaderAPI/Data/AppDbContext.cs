@@ -55,14 +55,33 @@ namespace MangaReaderAPI.Data
                 .HasForeignKey(x => x.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            
+
             modelBuilder.Entity<UserSeriesReadingHistory>()
                 .HasOne<Series>()
                 .WithMany()
                 .HasForeignKey(x => x.SeriesId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<Rating>()
+                .HasOne<User>()
+                .WithMany()
+                .HasForeignKey(r => r.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<SeriesView>()
+                .HasOne(sv => sv.User)
+                .WithMany()
+                .HasForeignKey(sv => sv.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<UserForgotPassword>()
+                .HasOne<User>()
+                .WithMany()
+                .HasForeignKey(ufp => ufp.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             base.OnModelCreating(modelBuilder);
         }
     }
-}
+}      

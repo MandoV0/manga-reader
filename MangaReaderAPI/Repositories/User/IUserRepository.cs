@@ -11,5 +11,6 @@ namespace MangaReaderAPI.Repositories
         Task<User?> GetUserByUsername(string username);
         Task<User> CreateUser(User user);
         Task<User> UpdateAsync(User user);
+        Task<User> DeleteUserAsync(User user);
     }
 }
