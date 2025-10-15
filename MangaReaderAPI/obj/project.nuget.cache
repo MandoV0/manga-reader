@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "WHj5qKWr3bw=",
+  "dgSpecHash": "yZgH2GfYfHQ=",
   "success": true,
-  "projectFilePath": "C:\\Users\\burak\\TAEAWTATAT\\manga-reader\\MangaReaderAPI\\MangaReaderAPI.csproj",
+  "projectFilePath": "C:\\Users\\burak\\TAEAWTATAT\\mr\\manga-reader\\MangaReaderAPI\\MangaReaderAPI.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\burak\\.nuget\\packages\\bogus\\35.6.4\\bogus.35.6.4.nupkg.sha512",
     "C:\\Users\\burak\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",

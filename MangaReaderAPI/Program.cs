@@ -23,7 +23,10 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IRatingRepository, RatingRepository>();
 builder.Services.AddScoped<IRatingService, RatingService>();
+builder.Services.AddScoped<IGenreService, GenreService>();
+builder.Services.AddScoped<IGenreRepository, GenreRepository>();
 builder.Services.AddScoped<PasswordHasherService>();
+builder.Services.AddScoped<IForgotPasswordRepository, ForgotPasswordRepository>();
 
 builder.Services.AddTransient<IEmailService, EmailService>();
 

@@ -3743,11 +3743,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\burak\\TAEAWTATAT\\manga-reader\\MangaReaderAPI\\MangaReaderAPI.csproj",
+      "projectUniqueName": "C:\\Users\\burak\\TAEAWTATAT\\mr\\manga-reader\\MangaReaderAPI\\MangaReaderAPI.csproj",
       "projectName": "MangaReaderAPI",
-      "projectPath": "C:\\Users\\burak\\TAEAWTATAT\\manga-reader\\MangaReaderAPI\\MangaReaderAPI.csproj",
+      "projectPath": "C:\\Users\\burak\\TAEAWTATAT\\mr\\manga-reader\\MangaReaderAPI\\MangaReaderAPI.csproj",
       "packagesPath": "C:\\Users\\burak\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\burak\\TAEAWTATAT\\manga-reader\\MangaReaderAPI\\obj\\",
+      "outputPath": "C:\\Users\\burak\\TAEAWTATAT\\mr\\manga-reader\\MangaReaderAPI\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
