@@ -10,10 +10,12 @@ namespace MangaReaderAPI.Controllers
     public class GenresController : ControllerBase
     {
         private readonly IGenreService _service;
+        private readonly IEmailService _emailService;
 
-        public GenresController(IGenreService service)
+        public GenresController(IGenreService service, IEmailService emailService)
         {
             _service = service;
+            _emailService = emailService;
         }
 
         [HttpGet]

@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MangaReaderAPI.DTOs
 {
-    public class AuthLoginDto
+    public class LoginRequestDto
     {
         [Required]
         [EmailAddress]

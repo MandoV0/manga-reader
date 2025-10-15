@@ -12,22 +12,24 @@ using System.Threading.Tasks;
 
 namespace MangaReaderAPI.Services
 {
-    public class AuthService : IAuthService, IUserForgotPasswordService
+    public class AuthService : IAuthService
     {
         private readonly IUserRepository _userRepo;
         private readonly PasswordHasherService _passwordHasher;
         private readonly IJwtTokenService _jwtTokenService;
         private readonly IForgotPasswordRepository _forgotPasswordRepo;
+        private readonly IEmailService _emailService;
 
-        public AuthService(IUserRepository userRepo, IForgotPasswordRepository forgotPasswordRepo, PasswordHasherService hasher, IJwtTokenService jwtTokenService)
+        public AuthService(IUserRepository userRepo, IForgotPasswordRepository forgotPasswordRepo, PasswordHasherService hasher, IJwtTokenService jwtTokenService, IEmailService emailService)
         {
             _userRepo = userRepo;
             _passwordHasher = hasher;
             _jwtTokenService = jwtTokenService;
             _forgotPasswordRepo = forgotPasswordRepo;
+            _emailService = emailService;
         }
 
-        public async Task<TokenDto> RegisterUser(AuthRegisterDto registerDto)
+        public async Task<TokenDto> RegisterUser(RegisterRequestDto registerDto)
         {
             if (await _userRepo.GetUserByEmail(registerDto.Email) != null)
             {
@@ -60,7 +62,7 @@ namespace MangaReaderAPI.Services
             };
         }
 
-        public async Task<TokenDto> LoginUser(AuthLoginDto loginDto)
+        public async Task<TokenDto> LoginUser(LoginRequestDto loginDto)
         {
             var userData = await _userRepo.GetUserByEmail(loginDto.Email);
             if (userData == null)
@@ -86,13 +88,20 @@ namespace MangaReaderAPI.Services
             var user = await _userRepo.GetUserByEmail(email);
             if (user == null) return;
 
+
+            var resetToken = Guid.NewGuid().ToString();
             var forgotPasswordEntry = new UserForgotPassword
             {
                 UserId = user.Id,
-                ResetToken = Guid.NewGuid().ToString(),
+                ResetToken = resetToken,
                 Expiry = DateTime.UtcNow.AddHours(1),
                 Used = false
             };
+
+            var resetLink = $"http://localhost:5110/auth/reset-password?token={resetToken}&email={email}";
+            var emailContent = $"<p>You requested a password reset. Click the link below to reset your password:</p><p><a href='{resetLink}'>Reset Password</a></p>";
+
+            await _emailService.SendEmailAsync(email, "Password Reset", emailContent);
 
             await _forgotPasswordRepo.AddAsync(forgotPasswordEntry);
         }
@@ -108,10 +117,25 @@ namespace MangaReaderAPI.Services
                 return;
             }
 
+            if (forgotPasswordEntry.Used)
+            {
+                return;
+            }
 
+            byte[] userSalt = _passwordHasher.GenerateSalt();
+            string hashedPassword = _passwordHasher.HashPassword(newPassword, userSalt);
+
+            user.UpdatedAt = DateTime.UtcNow;
+            user.PasswordHash = hashedPassword;
+            user.Salt = Convert.ToBase64String(userSalt);
 
             await _userRepo.UpdateAsync(user);
             await _forgotPasswordRepo.DeleteAsync(forgotPasswordEntry);
+        }
+
+        public Task ChangePasswordAsync(string email, string currentPassword, string newPassword)
+        {
+            throw new NotImplementedException();
         }
     }
 }

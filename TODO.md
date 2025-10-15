@@ -6,7 +6,7 @@
 
   - Series Bookmarks
   - Searching
-  - GET: All available Genres endpoint
+  - GET: All available Genres endpoint       DONE
   - Input Validation for all DTOs
   - Standardize DTOs 
 

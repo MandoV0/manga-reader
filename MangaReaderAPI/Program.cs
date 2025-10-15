@@ -9,9 +9,12 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using MangaReaderAPI.Seeding;
+using DotNetEnv;
 
 
 var builder = WebApplication.CreateBuilder(args);
+
+Env.Load();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));

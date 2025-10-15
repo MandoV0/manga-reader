@@ -20,14 +20,14 @@ namespace MangaReaderAPI.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult<TokenDto>> Register(AuthRegisterDto registerDto)
+        public async Task<ActionResult<TokenDto>> Register(RegisterRequestDto registerDto)
         {
             var token = await _service.RegisterUser(registerDto);
             return Ok(token);
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<TokenDto>> Login(AuthLoginDto loginDto)
+        public async Task<ActionResult<TokenDto>> Login(LoginRequestDto loginDto)
         {
             var token = await _service.LoginUser(loginDto);
             return Ok(token);
@@ -37,9 +37,18 @@ namespace MangaReaderAPI.Controllers
         /// <summary>
         /// Calls Email Service to send a email for password reset to the user.
         /// </summary>
-        public async Task ForgotPassword(string email)
+        public async Task<IActionResult> ForgotPassword(string email)
         {
-            
+            await _service.RequestPasswordResetAsync(email);
+            return Ok();
+        }
+
+        [HttpPost("reset-password")]
+        [AllowAnonymous]
+        public async Task<IActionResult> ResetPassword([FromQuery] string token, [FromQuery] string email, [FromBody] string newPassword)
+        {
+            await _service.ResetPasswordAsync(token, email, newPassword);
+            return Ok();
         }
     }
 }
