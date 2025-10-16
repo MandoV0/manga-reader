@@ -6,9 +6,14 @@ The Manga Reader is a full-stack web application that allows users to browse, re
 
 Here's a glimpse of what the Manga Reader application looks like:
 
-| Homepage | Manga Details |
+| Homepage-Hero | Manga Details |
 | :---: | :---: |
 | ![Homepage](assets/Homepage1-Hero.png) | ![Manga Details](assets/MangaDetailsPage.png) |
+
+| Homepag
+| :---: |
+| ![Homepage](assets/Homepage2.png) |
+
 
 | Browse Page | User Profile |
 | :---: | :---: |
