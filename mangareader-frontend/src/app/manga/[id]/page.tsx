@@ -82,7 +82,7 @@ export default function MangaDetail({ params }: Props) {
         <div className="relative h-[70vh] min-h-[500px] mb-8">
           <div 
             className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-            style={{ backgroundImage: `url(${manga.coverImageUrl})` }}
+            style={{ backgroundImage: `url(${manga.bannerImageUrl || manga.coverImageUrl})` }}
           />
           <div className="absolute inset-0 bg-gradient-to-r from-black via-black/70 to-transparent" />
           

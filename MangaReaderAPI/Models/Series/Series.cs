@@ -15,6 +15,7 @@ namespace MangaReaderAPI.Models
         public SeriesStatus Status { get; set; }
         public ICollection<Genre> Genres { get; set; } = new List<Genre>();
         public string? CoverImageUrl { get; set; }
+        public string? BannerImageUrl { get; set; }
         public DateTime ReleaseDate { get; set; } = DateTime.UtcNow;
 
         /* We use this so we dont have to do a full aggregation query every time a user Creates a review */ 

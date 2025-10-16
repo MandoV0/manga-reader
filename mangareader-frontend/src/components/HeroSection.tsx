@@ -33,7 +33,7 @@ export default function HeroSection({ featuredManga }: HeroSectionProps) {
     <section className="relative h-screen overflow-hidden">
       <div className="absolute inset-0 z-0">
         <img
-          src={featuredManga.coverImageUrl}
+          src={featuredManga.bannerImageUrl || featuredManga.coverImageUrl}
           alt={featuredManga.title}
           className={`w-full h-full object-cover transition-opacity duration-500 ${
             imageLoaded ? 'opacity-100' : 'opacity-0'

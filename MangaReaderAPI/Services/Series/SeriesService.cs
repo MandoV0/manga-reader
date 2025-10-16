@@ -35,8 +35,8 @@ namespace MangaReaderAPI.Services
         {
             var series = await _repo.GetAllSeries(page, pageSize, sort);
             var totalCount = await _repo.GetTotalSeriesCount();
-            
-            var seriesDtos = series.Select(s => new SeriesListDto { Id = s.Id, Title = s.Title, CoverImageUrl = s.CoverImageUrl });
+
+            var seriesDtos = series.Select(s => new SeriesListDto { Id = s.Id, Title = s.Title, CoverImageUrl = s.CoverImageUrl, BannerImageUrl = s.BannerImageUrl });
             
             return new PagedResponseDto<SeriesListDto>
             {
@@ -50,13 +50,13 @@ namespace MangaReaderAPI.Services
         public async Task<IEnumerable<SeriesListDto>> GetPopular()
         {
             var series = await _repo.GetPopular();
-            return series.Select(s => new SeriesListDto { Id = s.Id, Title = s.Title, CoverImageUrl = s.CoverImageUrl });
+            return series.Select(s => new SeriesListDto { Id = s.Id, Title = s.Title, CoverImageUrl = s.CoverImageUrl, BannerImageUrl = s.BannerImageUrl });
         }
 
         public async Task<IEnumerable<SeriesListDto>> GetRecentlyUpdated()
         {
             var series = await _repo.GetRecentlyUpdated();
-            return series.Select(s => new SeriesListDto { Id = s.Id, Title = s.Title, CoverImageUrl = s.CoverImageUrl });
+            return series.Select(s => new SeriesListDto { Id = s.Id, Title = s.Title, CoverImageUrl = s.CoverImageUrl, BannerImageUrl = s.BannerImageUrl });
         }
 
         public async Task<SeriesDto?> GetSeries(int id)
@@ -90,6 +90,7 @@ namespace MangaReaderAPI.Services
                 Description = series.Description,
                 Author = series.Author,
                 CoverImageUrl = series.CoverImageUrl,
+                BannerImageUrl = series.BannerImageUrl,
                 Publisher = series.Publisher,
                 Status = series.Status.ToString(),
                 Genres = series.Genres.Select(g => g.Name).ToList(),

@@ -13,3 +13,6 @@ dist/
 Migrations/
 
 .env
+
+seed_manga.py
+database.json

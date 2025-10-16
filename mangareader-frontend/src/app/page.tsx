@@ -16,7 +16,7 @@ export default async function HomePage() {
   // Use popular series as fallback for trending if it returns empty.
   // When no users view Mangas in the last 24 Hours it is empty.
   const trendingData = trending.length > 0 ? trending : popular;
-  const featuredManga = trendingData[0] || popular[0];
+  const featuredManga = trendingData[2] || popular[2];
 
   return (
     <main className="min-h-screen">

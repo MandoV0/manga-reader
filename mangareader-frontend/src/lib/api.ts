@@ -19,6 +19,7 @@ export interface SeriesListDto {
   id: number;
   title: string;
   coverImageUrl: string;
+  bannerImageUrl: string;
 }
 
 export interface SeriesDto {
@@ -26,6 +27,7 @@ export interface SeriesDto {
   title: string;
   description: string;
   coverImageUrl: string;
+  bannerImageUrl: string;
   author: string;
   publisher: string;
   status: string;

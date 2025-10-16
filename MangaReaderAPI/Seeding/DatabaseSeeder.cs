@@ -40,7 +40,8 @@ namespace MangaReaderAPI.Seeding
                 .RuleFor(s => s.Author, f => f.Person.FullName)
                 .RuleFor(s => s.Publisher, f => f.Company.CompanyName())
                 .RuleFor(s => s.Status, f => f.PickRandom<SeriesStatus>())
-                .RuleFor(s => s.CoverImageUrl, f => "https://placehold.co/300x400")
+                .RuleFor(s => s.CoverImageUrl, f => "https://placehold.co/200x300")
+                .RuleFor(s => s.BannerImageUrl, f => "https://placehold.co/1280x400")
                 .RuleFor(s => s.ReleaseDate, f => f.Date.Past(20).ToUniversalTime())
                 .RuleFor(s => s.AverageRating, f => Math.Round(f.Random.Double(1.0, 5.0), 1))
                 .RuleFor(s => s.Genres, f => f.PickRandom(genres, f.Random.Int(1, 3)).ToList())
@@ -58,7 +59,7 @@ namespace MangaReaderAPI.Seeding
                         {
                             pages.Add(new Page
                             {
-                                ImageUrl = "https://placehold.co/300x400",
+                                ImageUrl = "https://placehold.co/800x1200",
                                 Index = j
                             });
                         }
